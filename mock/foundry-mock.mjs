@@ -429,6 +429,18 @@ window.tfMock = {
         description: n === 4 ? "1 @creature[wraith] and [[/r 1d4 + 1]] @creature[Specter||specters]" : `${n} @creature[wraith]` }))
     }]);
   },
+  /** Демо-набор (mock/demo-tables.json): свой текст, для скриншотов и роликов. */
+  async seedDemo() {
+    const demo = await (await fetch(`${MODULE_ROOT}mock/demo-tables.json`)).json();
+    await Folder.createDocuments(demo.folders.map((f) => ({ _id: f.id, name: f.name, type: "RollTable", folder: f.parent ?? null })), { keepId: true });
+    await RollTable.createDocuments(demo.tables.map((t, i) => ({
+      name: t.name, folder: t.folder, replacement: true, img: "icons/svg/d20-grey.svg",
+      formula: `1d${t.results.length}`, ownership: { default: 2 },
+      flags: { "table-forge": { rollCount: [14, 9, 3, 7, 21, 12, 5, 8, 2, 4, 11, 6, 3, 17, 1][i % 15] } },
+      results: t.results.map((text, n) => ({ _id: `d${i}r${n}`, type: "text", range: [n + 1, n + 1], weight: 1, name: "", description: `<p>${text}</p>` }))
+    })));
+    return demo.tables.length;
+  },
   async addPack() {
     const files = (await loadFiles()).slice(0, 3);
     const tables = await Promise.all(files.map(async (f) => JSON.parse(await f.text())));
@@ -445,5 +457,6 @@ Hooks.callAll("init");
 Hooks.callAll("ready");
 const sidebar = document.getElementById("tables-directory");
 Hooks.callAll("renderRollTableDirectory", {}, sidebar, {});
+if (params.has("demo")) await tfMock.seedDemo();
 if (params.has("seed")) { await tfMock.addPack(); await tfMock.seedWorld(); await tfMock.addExtras(); }
 window.tfMockReady = true;
