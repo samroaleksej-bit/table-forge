@@ -48,7 +48,7 @@ jobs:
              --arg m "https://github.com/$REPO/releases/latest/download/module.json" \
              '.download = $d | .manifest = $m' module.json > module.release.json
           mkdir -p dist/table-forge
-          cp -r scripts templates styles lang README.md CHANGELOG.md LICENSE dist/table-forge/
+          cp -r scripts templates styles lang fonts README.md CHANGELOG.md LICENSE dist/table-forge/
           cp module.release.json dist/table-forge/module.json
           (cd dist/table-forge && zip -r ../../module.zip .)
           cp module.release.json dist/module.json

@@ -28,8 +28,8 @@
   --tf-warn: #9a5b00;
   --tf-bad: #b42318;
   --tf-radius: 8px;
-  --tf-font: var(--font-primary, "Signika"), system-ui, sans-serif;
-  --tf-font-display: var(--font-primary, "Signika"), system-ui, sans-serif;
+  --tf-font: "TF Manrope", var(--font-primary, "Signika"), system-ui, sans-serif;
+  --tf-font-display: "TF Manrope", var(--font-primary, "Signika"), system-ui, sans-serif;
 }
 
 :is(.table-forge, .tf-card, .tf-mini)[data-tf-theme="grimoire"] {
@@ -53,8 +53,8 @@
   --tf-warn: #8a5a12;
   --tf-bad: #8f1d1d;
   --tf-radius: 3px;
-  --tf-font: "Palatino Linotype", "Book Antiqua", Georgia, serif;
-  --tf-font-display: "Modesto Condensed", "Palatino Linotype", Georgia, serif;
+  --tf-font: "TF Cormorant", "Palatino Linotype", Georgia, serif;
+  --tf-font-display: "TF Cormorant", "Palatino Linotype", Georgia, serif;
 }
 
 :is(.table-forge, .tf-card, .tf-mini)[data-tf-theme="deck"] {
@@ -78,8 +78,8 @@
   --tf-warn: #e9b860;
   --tf-bad: #f08a8a;
   --tf-radius: 10px;
-  --tf-font: var(--font-primary, "Signika"), system-ui, sans-serif;
-  --tf-font-display: Georgia, "Times New Roman", serif;
+  --tf-font: "TF Manrope", var(--font-primary, "Signika"), system-ui, sans-serif;
+  --tf-font-display: "TF Playfair", Georgia, serif;
   --tf-ivory: #f3eee3;
   --tf-ivory-ink: #221c2e;
   --tf-suit: #8a2e3b;
@@ -106,8 +106,8 @@
   --tf-warn: #ffb547;
   --tf-bad: #ff6a5a;
   --tf-radius: 0;
-  --tf-font: Consolas, "Cascadia Mono", "Courier New", ui-monospace, monospace;
-  --tf-font-display: Consolas, "Cascadia Mono", "Courier New", ui-monospace, monospace;
+  --tf-font: "TF JetBrains Mono", Consolas, ui-monospace, monospace;
+  --tf-font-display: "TF JetBrains Mono", Consolas, ui-monospace, monospace;
 }
 
 :is(.table-forge, .tf-card, .tf-mini)[data-tf-theme="console"] {
@@ -131,8 +131,8 @@
   --tf-warn: #e9c46a;
   --tf-bad: #ef8a8a;
   --tf-radius: 12px;
-  --tf-font: var(--font-primary, "Signika"), system-ui, sans-serif;
-  --tf-font-display: var(--font-primary, "Signika"), system-ui, sans-serif;
+  --tf-font: "TF Manrope", var(--font-primary, "Signika"), system-ui, sans-serif;
+  --tf-font-display: "TF Manrope", var(--font-primary, "Signika"), system-ui, sans-serif;
 }
 
 /* ===================== Поверхности тем (кроме «Кузницы») ===================== */
@@ -250,7 +250,7 @@
 [data-tf-theme="grimoire"] .tf-row__folder-icon { color: #8c6a3c; }
 [data-tf-theme="grimoire"].tf-card { border: 1px solid #d9c7a2; box-shadow: inset 0 0 0 3px #f4ead3, inset 0 0 0 4px #d9c7a2; }
 [data-tf-theme="grimoire"] .tf-card__title h3 { font-size: 21px; color: #7a1f1f; }
-[data-tf-theme="grimoire"] .tf-card__text { font-size: 15px; }
+[data-tf-theme="grimoire"] .tf-card__text { font-size: 17px; line-height: 1.35; }
 
 /* ============================ Колода ============================ */
 
@@ -273,7 +273,8 @@
   [data-tf-theme="deck"] .tf-tile__roll:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 5px var(--tf-ivory), inset 0 0 0 6px var(--tf-brass), 0 14px 26px rgba(0, 0, 0, 0.5); }
 }
 [data-tf-theme="deck"] .tf-roll i { color: var(--tf-coin-ink); }
-[data-tf-theme="deck"].tf-card {
+.tf-card.tf-card[data-tf-theme="deck"] {
+  --tf-bg: var(--tf-ivory);
   background: var(--tf-ivory);
   color: var(--tf-ivory-ink);
   border-radius: 14px;
