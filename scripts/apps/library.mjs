@@ -5,6 +5,8 @@ import { previewRows, usableImage } from "../logic/results.mjs";
 import { escapeHTML } from "../logic/text.mjs";
 import { rollTable } from "../roll.mjs";
 import { ImportDialog } from "./import-dialog.mjs";
+import { ThemePicker } from "./theme-picker.mjs";
+import { currentTheme, themeChosen } from "../themes.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -26,6 +28,7 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
       toggleFavorite: TableLibrary.#onToggleFavorite,
       openSheet: TableLibrary.#onOpenSheet,
       openImport: () => new ImportDialog().render({ force: true }),
+      openThemes: () => new ThemePicker().render({ force: true }),
       clearSearch: TableLibrary.#onClearSearch
     }
   };
@@ -42,10 +45,16 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
     return (TableLibrary.#instance ??= new TableLibrary());
   }
 
+  /** Открыть библиотеку. В самый первый раз сначала предложить выбрать тему. */
+  static async open() {
+    if (!themeChosen()) await ThemePicker.choose();
+    return TableLibrary.instance.render({ force: true });
+  }
+
   static toggle() {
     const app = TableLibrary.instance;
     if (app.rendered) app.close();
-    else app.render({ force: true });
+    else TableLibrary.open();
   }
 
   /** Перерисовать, если окно открыто (после изменения таблиц или папок). */
@@ -265,8 +274,11 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
     const showWhere = searching || ["all", "fav", "recent"].includes(this.#folder);
     const folderLabel = (id) => model.path(id).map((f) => f.name).join(" / ");
 
+    const theme = currentTheme();
     return {
       isGM: game.user.isGM,
+      grid: theme.view === "grid",
+      keys: !!theme.keys,
       query: this.#query,
       mode: getSetting(SETTINGS.DEFAULT_MODE),
       specials: [
@@ -283,8 +295,9 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
       scopeLabel: crumbs.at(-1).label,
       canSearchAll: searching && this.#folder !== "all" && this.#folder !== "root",
       subfolders,
-      rows: shown.map((e) => ({
+      rows: shown.map((e, i) => ({
         uuid: e.uuid,
+        key: theme.keys && i < 9 ? String(i + 1) : null,
         name: e.name,
         img: usableImage(e.img, (id) => !!game.modules.get(id)?.active) ?? "icons/svg/d20-grey.svg",
         formula: e.formula || "—",
@@ -303,6 +316,19 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
   _onRender(context, options) {
     super._onRender?.(context, options);
     const root = this.element;
+    root.dataset.tfTheme = currentTheme().id;
+    if (!root.dataset.keysBound) {
+      // Тема «Пульт»: цифры 1–9 бросают плитку, когда фокус не в поле ввода.
+      root.dataset.keysBound = "1";
+      root.addEventListener("keydown", (event) => {
+        if (!currentTheme().keys || event.ctrlKey || event.altKey || event.metaKey) return;
+        if (event.target.closest("input, select, textarea")) return;
+        const tile = root.querySelector(`.tf-tile[data-key="${event.key}"]`);
+        if (!tile) return;
+        event.preventDefault();
+        rollTable(tile.dataset.uuid);
+      });
+    }
     const input = root.querySelector("input[name=tf-search]");
     if (input && !input.dataset.bound) {
       input.dataset.bound = "1";
@@ -313,7 +339,7 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
       input.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
           event.preventDefault();
-          const first = root.querySelector(".tf-row[data-uuid]");
+          const first = root.querySelector(".tf-row[data-uuid], .tf-tile[data-uuid]");
           if (first) rollTable(first.dataset.uuid);
         } else if (event.key === "Backspace" && !input.value) {
           // Как в проводнике: Backspace в пустом поиске — на уровень вверх.
@@ -344,7 +370,7 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
         }
       });
     }
-    for (const row of root.querySelectorAll(".tf-row[data-uuid]")) {
+    for (const row of root.querySelectorAll(".tf-row[data-uuid], .tf-tile[data-uuid]")) {
       row.addEventListener("mouseenter", () => this.#schedulePreview(row));
       row.addEventListener("mouseleave", () => this.#hidePreview());
       row.addEventListener("dblclick", (event) => {

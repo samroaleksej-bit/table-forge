@@ -82,10 +82,45 @@
       "DefaultMode": {
         "Name": "Who sees rolls",
         "Hint": "Default mode for Table Forge rolls. The GM can reveal a hidden card with the \"Show players\" button."
+      },
+      "Theme": {
+        "Name": "Look",
+        "Hint": "How the library and roll cards look. Only for you."
       }
     },
     "Keybindings": {
       "OpenLibrary": "Open Table Forge"
+    },
+    "Theme": {
+      "Title": "Table Forge look",
+      "Button": "Look",
+      "Lead": "Pick how the library and roll cards look. This is just for you: players choose their own.",
+      "Later": "Change it any time: the palette button in the library or the module settings.",
+      "Choose": "Use “{name}”",
+      "forge": {
+        "Name": "Forge",
+        "Hint": "Brass on dark with a coin for the number. Follows Foundry's light and dark theme."
+      },
+      "finder": {
+        "Name": "Explorer",
+        "Hint": "Light and tidy with a blue accent, like a file browser."
+      },
+      "grimoire": {
+        "Name": "Grimoire",
+        "Hint": "Parchment and red ink for atmospheric fantasy campaigns."
+      },
+      "deck": {
+        "Name": "Deck",
+        "Hint": "Tables as cards on velvet, formula in the corner. Big and visual."
+      },
+      "terminal": {
+        "Name": "Terminal",
+        "Hint": "Amber screen and monospace type. Made for Cyberpunk RED."
+      },
+      "console": {
+        "Name": "Console",
+        "Hint": "Big tiles and keys 1–9 to roll. For fast play."
+      }
     }
   }
 }

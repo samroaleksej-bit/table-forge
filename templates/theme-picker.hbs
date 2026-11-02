@@ -1,0 +1,26 @@
+<div class="tf-picker">
+  <p class="tf-picker__lead">{{localize "TABLEFORGE.Theme.Lead"}}</p>
+  <ul class="tf-picker__grid">
+    {{#each themes}}
+    <li>
+      <button type="button" class="tf-option {{#if selected}}selected{{/if}}" data-action="pick" data-theme="{{id}}" aria-pressed="{{#if selected}}true{{else}}false{{/if}}">
+        <span class="tf-mini" data-tf-theme="{{id}}" aria-hidden="true">
+          <span class="tf-mini__bar"></span>
+          {{#if grid}}
+          <span class="tf-mini__tiles"><span></span><span></span><span></span><span></span><span></span><span></span></span>
+          {{else}}
+          <span class="tf-mini__rows"><span></span><span></span><span></span><span></span></span>
+          {{/if}}
+          <span class="tf-mini__coin">6</span>
+        </span>
+        <span class="tf-option__name">{{name}}</span>
+        <span class="tf-option__hint">{{hint}}</span>
+      </button>
+    </li>
+    {{/each}}
+  </ul>
+  <footer class="tf-picker__footer">
+    <span class="tf-hint">{{localize "TABLEFORGE.Theme.Later"}}</span>
+    <button type="button" class="tf-primary" data-action="confirm"><i class="fa-solid fa-check"></i> {{localize "TABLEFORGE.Theme.Choose" name=selectedName}}</button>
+  </footer>
+</div>

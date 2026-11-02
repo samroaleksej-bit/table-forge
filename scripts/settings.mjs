@@ -1,4 +1,5 @@
 import { MODULE_ID, SETTINGS } from "./constants.mjs";
+import { THEMES, DEFAULT_THEME } from "./themes.mjs";
 
 export function registerSettings() {
   game.settings.register(MODULE_ID, SETTINGS.DEFAULT_MODE, {
@@ -13,6 +14,17 @@ export function registerSettings() {
     },
     default: "gm"
   });
+  game.settings.register(MODULE_ID, SETTINGS.THEME, {
+    name: "TABLEFORGE.Settings.Theme.Name",
+    hint: "TABLEFORGE.Settings.Theme.Hint",
+    scope: "client",
+    config: true,
+    type: String,
+    choices: Object.fromEntries(THEMES.map((th) => [th.id, `TABLEFORGE.Theme.${th.id}.Name`])),
+    default: DEFAULT_THEME,
+    onChange: (value) => Hooks.callAll("tableForge.theme", value)
+  });
+  game.settings.register(MODULE_ID, SETTINGS.THEME_CHOSEN, { scope: "client", config: false, type: Boolean, default: false });
   // Избранное и недавние — у каждого пользователя свои (scope "user" есть с v13).
   game.settings.register(MODULE_ID, SETTINGS.FAVORITES, { scope: "user", config: false, type: Array, default: [] });
   game.settings.register(MODULE_ID, SETTINGS.RECENT, { scope: "user", config: false, type: Array, default: [] });

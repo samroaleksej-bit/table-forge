@@ -8,6 +8,7 @@
     <option value="gm" {{#if (eq mode "gm")}}selected{{/if}}>{{localize "TABLEFORGE.Mode.gm"}}</option>
     <option value="public" {{#if (eq mode "public")}}selected{{/if}}>{{localize "TABLEFORGE.Mode.public"}}</option>
   </select>
+  <button type="button" class="tf-theme-btn" data-action="openThemes" data-tooltip="{{localize "TABLEFORGE.Theme.Button"}}" aria-label="{{localize "TABLEFORGE.Theme.Button"}}"><i class="fa-solid fa-palette"></i></button>
   {{#if isGM}}
   <button type="button" data-action="openImport"><i class="fa-solid fa-file-import"></i> {{localize "TABLEFORGE.Import.Button"}}</button>
   {{/if}}

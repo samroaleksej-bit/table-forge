@@ -3,6 +3,8 @@ import { registerSettings } from "./settings.mjs";
 import { TableLibrary } from "./apps/library.mjs";
 import { ImportDialog } from "./apps/import-dialog.mjs";
 import { rollTable, bindChatCard } from "./roll.mjs";
+import { ThemePicker } from "./apps/theme-picker.mjs";
+import { applyThemeToChat } from "./themes.mjs";
 
 Hooks.once("init", () => {
   registerSettings();
@@ -19,10 +21,12 @@ Hooks.once("init", () => {
     `${TEMPLATES}/library-tree.hbs`,
     `${TEMPLATES}/library-list.hbs`,
     `${TEMPLATES}/import.hbs`,
-    `${TEMPLATES}/chat-card.hbs`
+    `${TEMPLATES}/chat-card.hbs`,
+    `${TEMPLATES}/theme-picker.hbs`
   ]);
   game.modules.get(MODULE_ID).api = {
-    openLibrary: () => TableLibrary.instance.render({ force: true }),
+    openLibrary: () => TableLibrary.open(),
+    chooseTheme: () => new ThemePicker().render({ force: true }),
     openImport: () => new ImportDialog().render({ force: true }),
     rollTable
   };
@@ -37,7 +41,7 @@ Hooks.on("renderRollTableDirectory", (app, html) => {
   wrap.className = "tf-sidebar-buttons";
   wrap.innerHTML = `<button type="button" data-tf="library"><i class="fa-solid fa-table-list"></i> ${t("Library.Title")}</button>`
     + (game.user.isGM ? `<button type="button" data-tf="import"><i class="fa-solid fa-file-import"></i> ${t("Import.Button")}</button>` : "");
-  wrap.querySelector("[data-tf=library]").addEventListener("click", () => TableLibrary.instance.render({ force: true }));
+  wrap.querySelector("[data-tf=library]").addEventListener("click", () => TableLibrary.open());
   wrap.querySelector("[data-tf=import]")?.addEventListener("click", () => new ImportDialog().render({ force: true }));
   actions.after(wrap);
 });
@@ -49,3 +53,9 @@ Hooks.on("renderChatMessageHTML", bindChatCard);
 for (const hook of ["createRollTable", "updateRollTable", "deleteRollTable", "createFolder", "updateFolder", "deleteFolder", "tableForge.rolled"]) {
   Hooks.on(hook, () => TableLibrary.refresh());
 }
+
+/* Смена темы: библиотека и карточки в чате перекрашиваются сразу */
+Hooks.on("tableForge.theme", (id) => {
+  TableLibrary.refresh();
+  applyThemeToChat(id);
+});

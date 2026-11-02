@@ -5,7 +5,9 @@ export const SETTINGS = {
   DEFAULT_MODE: "defaultMode",
   FAVORITES: "favorites",
   RECENT: "recent",
-  EXPANDED: "expandedFolders"
+  EXPANDED: "expandedFolders",
+  THEME: "theme",
+  THEME_CHOSEN: "themeChosen"
 };
 
 export const RECENT_LIMIT = 15;

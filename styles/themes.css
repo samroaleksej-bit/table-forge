@@ -1,0 +1,417 @@
+/* Table Forge — темы оформления.
+ *
+ * Тема задаётся атрибутом data-tf-theme на окне, на карточке в чате и на мини-превью.
+ * «Кузница» (forge) — базовый вид из table-forge.css, следует светлой/тёмной теме Foundry.
+ * Остальные темы задают свой фон и шрифты, поэтому выглядят одинаково в любой теме Foundry.
+ */
+
+/* ============================ Токены ============================ */
+
+:is(.table-forge, .tf-card, .tf-mini)[data-tf-theme="finder"] {
+  --tf-bg: #ffffff;
+  --tf-control: #ffffff;
+  --tf-text: #1a1d24;
+  --tf-muted: #5b6270;
+  --tf-line: #e3e6eb;
+  --tf-hover: #f1f4f9;
+  --tf-panel: #f7f8fa;
+  --tf-pop: #ffffff;
+  --tf-accent: #2f5bea;
+  --tf-accent-soft: #e8eefd;
+  --tf-on-accent: #ffffff;
+  --tf-brass-hi: #4f78f2;
+  --tf-brass: #2f5bea;
+  --tf-brass-lo: #2448c4;
+  --tf-coin-ink: #ffffff;
+  --tf-coin-shadow: none;
+  --tf-ok: #2f7d32;
+  --tf-warn: #9a5b00;
+  --tf-bad: #b42318;
+  --tf-radius: 8px;
+  --tf-font: var(--font-primary, "Signika"), system-ui, sans-serif;
+  --tf-font-display: var(--font-primary, "Signika"), system-ui, sans-serif;
+}
+
+:is(.table-forge, .tf-card, .tf-mini)[data-tf-theme="grimoire"] {
+  --tf-bg: #f4ead3;
+  --tf-control: #fbf4e4;
+  --tf-text: #2b1d12;
+  --tf-muted: #5e4a36;
+  --tf-line: rgba(90, 53, 32, 0.24);
+  --tf-hover: rgba(122, 31, 31, 0.06);
+  --tf-panel: #ede0c4;
+  --tf-pop: #f8f0dd;
+  --tf-accent: #7a1f1f;
+  --tf-accent-soft: rgba(122, 31, 31, 0.1);
+  --tf-on-accent: #f4ead3;
+  --tf-brass-hi: #a63232;
+  --tf-brass: #7a1f1f;
+  --tf-brass-lo: #4e1010;
+  --tf-coin-ink: #f4ead3;
+  --tf-coin-shadow: none;
+  --tf-ok: #2e5b2a;
+  --tf-warn: #8a5a12;
+  --tf-bad: #8f1d1d;
+  --tf-radius: 3px;
+  --tf-font: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --tf-font-display: "Modesto Condensed", "Palatino Linotype", Georgia, serif;
+}
+
+:is(.table-forge, .tf-card, .tf-mini)[data-tf-theme="deck"] {
+  --tf-bg: #1e1a2e;
+  --tf-control: #2a2440;
+  --tf-text: #ede6d6;
+  --tf-muted: #b8afc9;
+  --tf-line: rgba(226, 196, 111, 0.2);
+  --tf-hover: rgba(243, 238, 227, 0.06);
+  --tf-panel: rgba(243, 238, 227, 0.04);
+  --tf-pop: #2a2440;
+  --tf-accent: #e2c46f;
+  --tf-accent-soft: rgba(226, 196, 111, 0.15);
+  --tf-on-accent: #221c2e;
+  --tf-brass-hi: #f3de9c;
+  --tf-brass: #c9a54c;
+  --tf-brass-lo: #8a6d25;
+  --tf-coin-ink: #221c2e;
+  --tf-coin-shadow: none;
+  --tf-ok: #8fd18a;
+  --tf-warn: #e9b860;
+  --tf-bad: #f08a8a;
+  --tf-radius: 10px;
+  --tf-font: var(--font-primary, "Signika"), system-ui, sans-serif;
+  --tf-font-display: Georgia, "Times New Roman", serif;
+  --tf-ivory: #f3eee3;
+  --tf-ivory-ink: #221c2e;
+  --tf-suit: #8a2e3b;
+}
+
+:is(.table-forge, .tf-card, .tf-mini)[data-tf-theme="terminal"] {
+  --tf-bg: #19130d;
+  --tf-control: #221a11;
+  --tf-text: #f2d8b0;
+  --tf-muted: #b0946a;
+  --tf-line: #3a2b1a;
+  --tf-hover: rgba(255, 181, 71, 0.08);
+  --tf-panel: #1f1810;
+  --tf-pop: #221a11;
+  --tf-accent: #ffb547;
+  --tf-accent-soft: rgba(255, 181, 71, 0.14);
+  --tf-on-accent: #19130d;
+  --tf-brass-hi: #ffb547;
+  --tf-brass: #ffb547;
+  --tf-brass-lo: #ffb547;
+  --tf-coin-ink: #19130d;
+  --tf-coin-shadow: none;
+  --tf-ok: #9be07a;
+  --tf-warn: #ffb547;
+  --tf-bad: #ff6a5a;
+  --tf-radius: 0;
+  --tf-font: Consolas, "Cascadia Mono", "Courier New", ui-monospace, monospace;
+  --tf-font-display: Consolas, "Cascadia Mono", "Courier New", ui-monospace, monospace;
+}
+
+:is(.table-forge, .tf-card, .tf-mini)[data-tf-theme="console"] {
+  --tf-bg: #1e2229;
+  --tf-control: #2a2f38;
+  --tf-text: #e8ebf0;
+  --tf-muted: #aeb5c2;
+  --tf-line: #353b46;
+  --tf-hover: #262b33;
+  --tf-panel: #232830;
+  --tf-pop: #2a2f38;
+  --tf-accent: #3cc0b0;
+  --tf-accent-soft: rgba(42, 157, 143, 0.2);
+  --tf-on-accent: #0f2421;
+  --tf-brass-hi: #3db8a9;
+  --tf-brass: #2a9d8f;
+  --tf-brass-lo: #1f7a6f;
+  --tf-coin-ink: #0f2421;
+  --tf-coin-shadow: none;
+  --tf-ok: #7fd18a;
+  --tf-warn: #e9c46a;
+  --tf-bad: #ef8a8a;
+  --tf-radius: 12px;
+  --tf-font: var(--font-primary, "Signika"), system-ui, sans-serif;
+  --tf-font-display: var(--font-primary, "Signika"), system-ui, sans-serif;
+}
+
+/* ===================== Поверхности тем (кроме «Кузницы») ===================== */
+
+.table-forge[data-tf-theme]:not([data-tf-theme="forge"]) .window-content {
+  background: var(--tf-bg);
+  color: var(--tf-text);
+  font-family: var(--tf-font);
+}
+.table-forge[data-tf-theme]:not([data-tf-theme="forge"]) .window-content :is(input, select, button:not(.tf-roll):not(.tf-primary):not(.tf-icon):not(.tf-tile__roll):not(.tf-option)) {
+  background: var(--tf-control);
+  color: var(--tf-text);
+  border: 1px solid var(--tf-line);
+  border-radius: var(--tf-radius);
+  font-family: var(--tf-font);
+}
+.table-forge[data-tf-theme]:not([data-tf-theme="forge"]) :is(.tf-status, .tf-crumbs) { background: var(--tf-bg); }
+.table-forge[data-tf-theme]:not([data-tf-theme="forge"]) .tf-search { background: var(--tf-control); }
+.table-forge[data-tf-theme]:not([data-tf-theme="forge"]) .tf-search input { border: none; background: transparent; }
+.table-forge[data-tf-theme]:not([data-tf-theme="forge"]) a { color: inherit; }
+
+/* Карточка в чате получает собственный фон темы */
+.tf-card[data-tf-theme]:not([data-tf-theme="forge"]) {
+  padding: 10px 12px 12px;
+  border-radius: var(--tf-radius);
+  background: var(--tf-bg);
+  color: var(--tf-text);
+  font-family: var(--tf-font);
+}
+.tf-card[data-tf-theme]:not([data-tf-theme="forge"]) .tf-card__actions button {
+  background: var(--tf-control);
+  color: var(--tf-text);
+  border: 1px solid var(--tf-line);
+  border-radius: var(--tf-radius);
+  font-family: var(--tf-font);
+}
+.tf-card[data-tf-theme] .tf-card__title h3 { font-family: var(--tf-font-display, "Modesto Condensed", Georgia, serif); }
+.tf-card[data-tf-theme]:not([data-tf-theme="forge"]) a.content-link,
+.tf-card[data-tf-theme]:not([data-tf-theme="forge"]) a.inline-roll { color: var(--tf-text); }
+
+/* ============================ Плитки (общее) ============================ */
+
+.tf-grid {
+  list-style: none;
+  margin: 0;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+  flex: 1;
+  align-content: start;
+}
+.tf-rows:has(+ .tf-grid) { flex: 0 0 auto; }
+.tf-tile { position: relative; }
+.tf-tile__roll {
+  width: 100%;
+  height: 100%;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  border-radius: var(--tf-radius);
+  border: 1px solid var(--tf-line);
+  background: var(--tf-panel);
+  color: var(--tf-text);
+  font: inherit;
+  text-align: left;
+  line-height: 1.2;
+  transition: transform 120ms var(--tf-ease-out), box-shadow 150ms ease;
+}
+.tf-tile__roll:active { transform: scale(0.97); }
+.tf-tile__corner { display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 12px; font-weight: 700; color: var(--tf-muted); font-variant-numeric: tabular-nums; }
+.tf-tile__corner kbd { font: inherit; font-size: 12px; padding: 1px 7px; border-radius: 6px; background: var(--tf-bg); color: var(--tf-muted); border: 1px solid var(--tf-line); }
+.tf-tile__mark { flex: 1; display: grid; place-items: center; font-size: 28px; color: var(--tf-accent); opacity: 0.85; }
+.tf-tile__name { font-size: 14px; font-weight: 700; overflow-wrap: break-word; hyphens: auto; }
+.tf-tile__where { font-size: 11px; color: var(--tf-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tf-tile__tools { position: absolute; top: 30px; right: 6px; display: flex; flex-direction: column; }
+.tf-tile--top .tf-tile__roll { box-shadow: 0 0 0 2px var(--tf-accent); }
+@media (hover: hover) and (pointer: fine) {
+  .tf-tile__roll:hover { box-shadow: 0 0 0 2px var(--tf-accent-soft), 0 6px 16px rgba(0, 0, 0, 0.25); }
+  .tf-tile .tf-icon:not(.tf-fav) { opacity: 0; transition: opacity 120ms ease; }
+  .tf-tile:hover .tf-icon,
+  .tf-tile .tf-icon:focus-visible { opacity: 1; }
+}
+
+/* ============================ Проводник ============================ */
+
+[data-tf-theme="finder"] .tf-node.active { background: var(--tf-accent); border-left-color: var(--tf-accent); color: #ffffff; }
+[data-tf-theme="finder"] .tf-node.active > i,
+[data-tf-theme="finder"] .tf-node.active .tf-count,
+[data-tf-theme="finder"] .tf-node.active .tf-folder-icon { color: #ffffff; }
+[data-tf-theme="finder"] .tf-node { border-radius: 6px; margin: 0 6px; border-left: none; }
+[data-tf-theme="finder"] .tf-roll { background: var(--tf-accent); border-color: var(--tf-accent); box-shadow: none; }
+[data-tf-theme="finder"] .tf-roll i { color: #ffffff; }
+[data-tf-theme="finder"] .tf-primary { background: var(--tf-accent); border-color: var(--tf-accent); color: #ffffff; box-shadow: none; }
+[data-tf-theme="finder"] .tf-coin { background: var(--tf-accent-soft); border: none; box-shadow: none; color: var(--tf-accent); border-radius: 12px; }
+[data-tf-theme="finder"] .tf-ruler__fill { background: var(--tf-accent); }
+[data-tf-theme="finder"].tf-card { border: 1px solid var(--tf-line); }
+
+/* ============================ Гримуар ============================ */
+
+[data-tf-theme="grimoire"] .tf-node,
+[data-tf-theme="grimoire"] .tf-row__name { font-size: 15px; }
+[data-tf-theme="grimoire"] .tf-row__name,
+[data-tf-theme="grimoire"] .tf-crumb.current,
+[data-tf-theme="grimoire"] .tf-preview header strong { font-family: var(--tf-font-display); font-size: 17px; letter-spacing: 0.01em; }
+[data-tf-theme="grimoire"] .tf-tree h4,
+[data-tf-theme="grimoire"] .tf-row__where,
+[data-tf-theme="grimoire"] .tf-status { font-style: italic; }
+[data-tf-theme="grimoire"] .tf-row { border-bottom-style: dotted; }
+[data-tf-theme="grimoire"] .tf-roll { border-radius: 50%; }
+[data-tf-theme="grimoire"] .tf-roll i { color: #f4ead3; }
+[data-tf-theme="grimoire"] .tf-folder-icon,
+[data-tf-theme="grimoire"] .tf-row__folder-icon { color: #8c6a3c; }
+[data-tf-theme="grimoire"].tf-card { border: 1px solid #d9c7a2; box-shadow: inset 0 0 0 3px #f4ead3, inset 0 0 0 4px #d9c7a2; }
+[data-tf-theme="grimoire"] .tf-card__title h3 { font-size: 21px; color: #7a1f1f; }
+[data-tf-theme="grimoire"] .tf-card__text { font-size: 15px; }
+
+/* ============================ Колода ============================ */
+
+[data-tf-theme="deck"] .tf-tile__roll {
+  min-height: 190px;
+  background: var(--tf-ivory);
+  color: var(--tf-ivory-ink);
+  border: none;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 5px var(--tf-ivory), inset 0 0 0 6px var(--tf-brass), 0 8px 18px rgba(0, 0, 0, 0.35);
+  text-align: center;
+}
+[data-tf-theme="deck"] .tf-tile__corner { color: var(--tf-suit); font-family: var(--tf-font-display); font-size: 14px; }
+[data-tf-theme="deck"] .tf-tile__mark { color: var(--tf-suit); font-size: 34px; }
+[data-tf-theme="deck"] .tf-tile__name { font-family: var(--tf-font-display); font-size: 15px; }
+[data-tf-theme="deck"] .tf-tile__where { color: #6b6178; }
+[data-tf-theme="deck"] .tf-tile .tf-icon { color: #6b6178; }
+[data-tf-theme="deck"] .tf-tile--top .tf-tile__roll { box-shadow: inset 0 0 0 5px var(--tf-ivory), inset 0 0 0 6px var(--tf-brass), 0 0 0 3px var(--tf-accent), 0 14px 26px rgba(0, 0, 0, 0.5); }
+@media (hover: hover) and (pointer: fine) {
+  [data-tf-theme="deck"] .tf-tile__roll:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 5px var(--tf-ivory), inset 0 0 0 6px var(--tf-brass), 0 14px 26px rgba(0, 0, 0, 0.5); }
+}
+[data-tf-theme="deck"] .tf-roll i { color: var(--tf-coin-ink); }
+[data-tf-theme="deck"].tf-card {
+  background: var(--tf-ivory);
+  color: var(--tf-ivory-ink);
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 5px var(--tf-ivory), inset 0 0 0 6px var(--tf-brass);
+  padding: 14px 16px 14px;
+  --tf-muted: #6b6178;
+  --tf-line: rgba(34, 28, 46, 0.14);
+  --tf-control: #ebe4d4;
+  --tf-text: #221c2e;
+  --tf-accent: #8a2e3b;
+}
+[data-tf-theme="deck"] .tf-card__title h3 { font-size: 20px; }
+[data-tf-theme="deck"] .tf-coin { border-radius: 10px; background: var(--tf-suit, #8a2e3b); color: #f3eee3; border: none; box-shadow: none; }
+
+/* ============================ Терминал ============================ */
+
+[data-tf-theme="terminal"] .window-content { position: relative; }
+[data-tf-theme="terminal"] .window-content::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.16) 0 1px, transparent 1px 3px);
+}
+[data-tf-theme="terminal"] .tf-node.active,
+[data-tf-theme="terminal"] .tf-row--top { background: var(--tf-accent); color: var(--tf-on-accent); box-shadow: none; }
+[data-tf-theme="terminal"] .tf-node.active :is(i, .tf-count),
+[data-tf-theme="terminal"] .tf-row--top :is(.tf-row__where, .tf-row__formula, .tf-row__count, .tf-row__rolls, .tf-icon) { color: var(--tf-on-accent); }
+[data-tf-theme="terminal"] .tf-roll { background: transparent; border: 1px solid var(--tf-accent); box-shadow: none; }
+[data-tf-theme="terminal"] .tf-roll i { color: var(--tf-accent); }
+[data-tf-theme="terminal"] .tf-row--top .tf-roll { border-color: var(--tf-on-accent); }
+[data-tf-theme="terminal"] .tf-row--top .tf-roll i { color: var(--tf-on-accent); }
+[data-tf-theme="terminal"] .tf-folder-icon,
+[data-tf-theme="terminal"] .tf-row__folder-icon { color: var(--tf-accent); }
+[data-tf-theme="terminal"] .tf-primary { background: var(--tf-accent); border-color: var(--tf-accent); box-shadow: none; }
+[data-tf-theme="terminal"] .tf-coin { border-radius: 0; background: var(--tf-accent); border: none; box-shadow: none; }
+[data-tf-theme="terminal"] .tf-ruler__track { border-radius: 0; }
+[data-tf-theme="terminal"].tf-card { border: 1px solid var(--tf-accent); box-shadow: 4px 4px 0 #ff4d3d; }
+[data-tf-theme="terminal"] .tf-card__title h3 { font-size: 15px; text-transform: none; }
+
+/* ============================ Пульт ============================ */
+
+[data-tf-theme="console"] .tf-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+[data-tf-theme="console"] .tf-tile__roll { min-height: 130px; background: var(--tf-control); border-color: var(--tf-line); }
+[data-tf-theme="console"] .tf-tile__mark { justify-items: start; font-size: 18px; }
+[data-tf-theme="console"] .tf-tile__name { font-size: 16px; color: #f2f4f7; }
+[data-tf-theme="console"] .tf-tile--top .tf-tile__roll,
+[data-tf-theme="console"] .tf-tile[data-key="1"] .tf-tile__roll { border: 2px solid var(--tf-brass); }
+[data-tf-theme="console"] .tf-roll { border: none; box-shadow: none; }
+[data-tf-theme="console"] .tf-coin { border-radius: 12px; border: none; box-shadow: none; }
+[data-tf-theme="console"].tf-card { border-top: 6px solid var(--tf-brass); }
+
+/* ============================ Окно выбора темы ============================ */
+
+.tf-theme-picker .window-content { padding: 14px; }
+.tf-picker { display: flex; flex-direction: column; gap: 14px; }
+.tf-picker__lead { margin: 0; font-size: 14px; }
+.tf-picker__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.tf-option {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  padding: 8px 8px 10px;
+  border-radius: 10px;
+  border: 2px solid var(--tf-line);
+  background: var(--tf-panel);
+  color: var(--tf-text);
+  font: inherit;
+  text-align: left;
+  line-height: 1.3;
+  transition: border-color 150ms ease, transform 120ms var(--tf-ease-out);
+}
+.tf-option:active { transform: scale(0.98); }
+.tf-option.selected { border-color: var(--tf-accent); box-shadow: 0 0 0 3px var(--tf-accent-soft); }
+.tf-option__name { margin-top: 4px; font-size: 15px; font-weight: 700; }
+.tf-option__hint { font-size: 12px; color: var(--tf-muted); }
+.tf-picker__footer { display: flex; align-items: center; gap: 12px; }
+.tf-picker__footer .tf-hint { flex: 1; color: var(--tf-muted); }
+.tf-picker__footer button { width: auto; padding: 0 16px; min-height: 36px; }
+
+/* Мини-превью темы: нарисовано теми же токенами, что и сама тема */
+.tf-mini {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  height: 104px;
+  padding: 8px;
+  border-radius: 7px;
+  overflow: hidden;
+  background: var(--tf-bg, #23211c);
+  border: 1px solid var(--tf-line);
+}
+/* «Кузница» в превью — её тёмный вариант (сама тема в окне следует теме Foundry) */
+.tf-mini[data-tf-theme="forge"] {
+  --tf-bg: #23211c;
+  --tf-control: rgba(255, 240, 210, 0.08);
+  --tf-line: rgba(255, 240, 210, 0.12);
+  --tf-accent: #dcb45c;
+  --tf-accent-soft: rgba(220, 180, 92, 0.16);
+  --tf-brass-hi: #e3c06a;
+  --tf-brass: #b58a2a;
+  --tf-brass-lo: #6d4f12;
+  --tf-coin-ink: #2a1d05;
+}
+.tf-mini__bar { height: 12px; border-radius: 3px; background: var(--tf-control, rgba(255, 255, 255, 0.08)); border: 1px solid var(--tf-line); }
+.tf-mini__rows { display: flex; flex-direction: column; gap: 5px; }
+.tf-mini__rows span { height: 9px; border-radius: 2px; background: var(--tf-line); }
+.tf-mini__rows span:first-child { background: var(--tf-accent-soft); box-shadow: inset 3px 0 0 var(--tf-accent); }
+.tf-mini__rows span:nth-child(2) { width: 82%; }
+.tf-mini__rows span:nth-child(3) { width: 90%; }
+.tf-mini__rows span:nth-child(4) { width: 64%; }
+.tf-mini__tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+.tf-mini__tiles span { height: 30px; border-radius: 4px; background: var(--tf-ivory, var(--tf-control)); border: 1px solid var(--tf-line); }
+.tf-mini__tiles span:first-child { border: 2px solid var(--tf-accent); }
+.tf-mini__coin {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--tf-brass-hi) 0%, var(--tf-brass) 62%, var(--tf-brass-lo) 100%);
+  color: var(--tf-coin-ink, #2a1d05);
+  font-size: 13px;
+  font-weight: 800;
+}
+.tf-mini[data-tf-theme="terminal"] .tf-mini__coin,
+.tf-mini[data-tf-theme="finder"] .tf-mini__coin { border-radius: 4px; }
+.tf-mini[data-tf-theme="grimoire"] { font-family: var(--tf-font-display); }
+
+@media (prefers-reduced-motion: reduce) {
+  .tf-tile__roll:active,
+  .tf-option:active { transform: none; }
+  [data-tf-theme="deck"] .tf-tile__roll:hover { transform: none; }
+}

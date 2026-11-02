@@ -105,7 +105,7 @@ class ApplicationV2 {
     const w = o.position.width ?? 600;
     const h = o.position.height ?? 500;
     const n = document.querySelectorAll("#windows .application").length;
-    Object.assign(el.style, { width: `${w}px`, height: `${h}px`, left: `${20 + n * 40}px`, top: `${20 + n * 30}px` });
+    Object.assign(el.style, { width: `${w}px`, height: typeof h === "number" ? `${h}px` : "auto", left: `${20 + n * 40}px`, top: `${20 + n * 30}px` });
     el.innerHTML = `<header class="window-header"><i class="${o.window.icon ?? ""}"></i><h1 class="window-title">${i18n.localize(o.window.title ?? "")}</h1><button type="button" class="header-control" data-mock-close><i class="fa-solid fa-xmark"></i></button></header><section class="window-content"></section>`;
     el.querySelector("[data-mock-close]").addEventListener("click", () => this.close());
     el.addEventListener("pointerdown", () => this.bringToFront());
@@ -340,7 +340,7 @@ globalThis.game = {
   settings: {
     register(ns, key, def) { settingsDefs.set(`${ns}.${key}`, def); },
     get(ns, key) { const k = `${ns}.${key}`; return structuredClone(settingsValues.has(k) ? settingsValues.get(k) : settingsDefs.get(k)?.default); },
-    async set(ns, key, value) { settingsValues.set(`${ns}.${key}`, structuredClone(value)); return value; }
+    async set(ns, key, value) { settingsValues.set(`${ns}.${key}`, structuredClone(value)); settingsDefs.get(`${ns}.${key}`)?.onChange?.(value); return value; }
   },
   keybindings: { register(ns, key, def) { keybindings.push(def); } }
 };

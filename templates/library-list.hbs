@@ -43,6 +43,7 @@
         <i class="fa-solid fa-chevron-right tf-row__chevron"></i>
       </li>
       {{/each}}
+      {{#unless grid}}
       {{#each rows}}
       <li class="tf-row{{#if @first}}{{#if @root.query}} tf-row--top{{/if}}{{/if}}" data-uuid="{{uuid}}">
         <button type="button" class="tf-roll" data-action="roll" data-tooltip="{{localize "TABLEFORGE.Library.Roll"}}" aria-label="{{localize "TABLEFORGE.Library.Roll"}}"><i class="fa-solid fa-dice-d20"></i></button>
@@ -57,7 +58,26 @@
         <button type="button" class="tf-icon" data-action="openSheet" data-tooltip="{{localize "TABLEFORGE.Library.Open"}}" aria-label="{{localize "TABLEFORGE.Library.Open"}}"><i class="fa-solid fa-pen-to-square"></i></button>
       </li>
       {{/each}}
+      {{/unless}}
     </ol>
+    {{#if grid}}
+    <ol class="tf-grid">
+      {{#each rows}}
+      <li class="tf-tile{{#if @first}}{{#if @root.query}} tf-tile--top{{/if}}{{/if}}" data-uuid="{{uuid}}" {{#if key}}data-key="{{key}}"{{/if}}>
+        <button type="button" class="tf-tile__roll" data-action="roll" aria-label="{{localize "TABLEFORGE.Library.Roll"}}: {{name}}">
+          <span class="tf-tile__corner"><span>{{formula}}</span>{{#if key}}<kbd>{{key}}</kbd>{{else}}<span>{{count}}</span>{{/if}}</span>
+          <span class="tf-tile__mark" aria-hidden="true"><i class="fa-solid fa-dice-d20"></i></span>
+          <span class="tf-tile__name">{{name}}</span>
+          {{#if where}}<span class="tf-tile__where">{{where}}</span>{{/if}}
+        </button>
+        <span class="tf-tile__tools">
+          <button type="button" class="tf-icon {{#if fav}}tf-fav{{/if}}" data-action="toggleFavorite" data-tooltip="{{localize "TABLEFORGE.Library.Favorite"}}" aria-label="{{localize "TABLEFORGE.Library.Favorite"}}"><i class="{{#if fav}}fa-solid{{else}}fa-regular{{/if}} fa-star"></i></button>
+          <button type="button" class="tf-icon" data-action="openSheet" data-tooltip="{{localize "TABLEFORGE.Library.Open"}}" aria-label="{{localize "TABLEFORGE.Library.Open"}}"><i class="fa-solid fa-pen-to-square"></i></button>
+        </span>
+      </li>
+      {{/each}}
+    </ol>
+    {{/if}}
     {{#if truncated}}<p class="tf-more">{{localize "TABLEFORGE.Library.Truncated"}}</p>{{/if}}
   {{/if}}
   <footer class="tf-status">{{localize "TABLEFORGE.Library.Found"}}: {{total}}</footer>
