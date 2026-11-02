@@ -121,6 +121,61 @@
         "Name": "Console",
         "Hint": "Big tiles and keys 1–9 to roll. For fast play."
       }
+    },
+    "Studio": {
+      "Title": "Look workshop",
+      "Open": "Customize…",
+      "Hint": "Tune colors, fonts, scale and density of the chosen look. Only for you.",
+      "Base": "Base",
+      "Theme": "Look",
+      "Colors": "Colors",
+      "Accent": "Accent",
+      "Background": "Background",
+      "Text": "Text",
+      "Type": "Type and size",
+      "FontBody": "Body",
+      "FontDisplay": "Headings",
+      "Scale": "Scale",
+      "Shape": "Shape and list",
+      "Radius": "Corners",
+      "DensityLabel": "Density",
+      "ViewLabel": "Tables as",
+      "Motion": "Animations",
+      "FromTheme": "From the look",
+      "Font": {
+        "manrope": "Manrope",
+        "playfair": "Playfair Display",
+        "cormorant": "Cormorant Garamond",
+        "jetbrains": "JetBrains Mono",
+        "foundry": "Foundry font"
+      },
+      "Density": {
+        "normal": "Normal",
+        "compact": "Compact",
+        "spacious": "Spacious"
+      },
+      "View": {
+        "theme": "From the look",
+        "list": "Rows",
+        "grid": "Tiles"
+      },
+      "ContrastOk": "Text contrast {ratio}:1, easy to read.",
+      "ContrastBad": "Text contrast {ratio}:1, hard to read. Aim for 4.5 or more.",
+      "PreviewLibrary": "Library",
+      "PreviewCard": "Chat card",
+      "Reset": "Reset to look",
+      "Save": "Save",
+      "Saved": "Look saved.",
+      "Sample": {
+        "Table": "Tavern rumors",
+        "Result": "The miller swears he saw lights in the old graveyard.",
+        "Folder": "Tavern",
+        "Subfolder": "Patrons",
+        "Row1": "Tavern rumors",
+        "Row2": "Innkeeper names",
+        "Row3": "Dish of the day",
+        "Row4": "Who sits in the corner"
+      }
     }
   }
 }

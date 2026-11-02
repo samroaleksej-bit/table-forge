@@ -7,7 +7,8 @@ export const SETTINGS = {
   RECENT: "recent",
   EXPANDED: "expandedFolders",
   THEME: "theme",
-  THEME_CHOSEN: "themeChosen"
+  THEME_CHOSEN: "themeChosen",
+  CUSTOM: "themeCustom"
 };
 
 export const RECENT_LIMIT = 15;

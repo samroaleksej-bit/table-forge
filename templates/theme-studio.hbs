@@ -1,0 +1,95 @@
+<div class="tf-studio">
+  <form class="tf-studio__controls" autocomplete="off">
+    <fieldset>
+      <legend>{{localize "TABLEFORGE.Studio.Base"}}</legend>
+      <label class="tf-field">{{localize "TABLEFORGE.Studio.Theme"}}
+        <select name="theme">{{#each themes}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>{{localize "TABLEFORGE.Studio.Colors"}}</legend>
+      <label class="tf-field">{{localize "TABLEFORGE.Studio.Accent"}} <input type="color" name="accent"></label>
+      <label class="tf-field">{{localize "TABLEFORGE.Studio.Background"}} <input type="color" name="bg"></label>
+      <label class="tf-field">{{localize "TABLEFORGE.Studio.Text"}} <input type="color" name="text"></label>
+      <p class="tf-contrast" role="status"></p>
+    </fieldset>
+
+    <fieldset>
+      <legend>{{localize "TABLEFORGE.Studio.Type"}}</legend>
+      <label class="tf-field">{{localize "TABLEFORGE.Studio.FontBody"}}
+        <select name="font">{{#each fonts}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+      </label>
+      <label class="tf-field">{{localize "TABLEFORGE.Studio.FontDisplay"}}
+        <select name="fontDisplay">{{#each fontsDisplay}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+      </label>
+      <label class="tf-field">{{localize "TABLEFORGE.Studio.Scale"}}
+        <input type="range" name="scale" id="tf-scale" min="85" max="130" step="5" value="{{scale}}">
+        <output for="tf-scale">{{scale}}%</output>
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>{{localize "TABLEFORGE.Studio.Shape"}}</legend>
+      <label class="tf-field">{{localize "TABLEFORGE.Studio.Radius"}}
+        <input type="range" name="radius" id="tf-radius" min="0" max="18" step="1" value="{{radiusValue}}">
+        <output for="tf-radius">{{radiusValue}}px</output>
+      </label>
+      <label class="tf-field">{{localize "TABLEFORGE.Studio.DensityLabel"}}
+        <select name="density">{{#each density}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+      </label>
+      <label class="tf-field">{{localize "TABLEFORGE.Studio.ViewLabel"}}
+        <select name="view">{{#each view}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+      </label>
+      <label class="tf-field">{{localize "TABLEFORGE.Studio.Motion"}} <input type="checkbox" name="motion" {{#if motion}}checked{{/if}}></label>
+    </fieldset>
+  </form>
+
+  <div class="tf-studio__preview">
+    <p class="tf-studio__label">{{localize "TABLEFORGE.Studio.PreviewLibrary"}}</p>
+    <div class="table-forge tf-preview-lib">
+      <div class="window-content">
+        <section class="tf-list">
+          <nav class="tf-crumbs">
+            <button type="button" class="tf-up" disabled><i class="fa-solid fa-arrow-up"></i></button>
+            <ol><li><span class="tf-crumb">{{localize "TABLEFORGE.Library.World"}}</span></li><li><span class="tf-crumb current">{{localize "TABLEFORGE.Studio.Sample.Folder"}}</span></li></ol>
+          </nav>
+          <ol class="tf-rows">
+            <li class="tf-row tf-row--folder"><span class="tf-row__folder-icon"><i class="fa-solid fa-folder"></i></span><div class="tf-row__main"><span class="tf-row__name">{{localize "TABLEFORGE.Studio.Sample.Subfolder"}}</span><span class="tf-row__where">{{localize "TABLEFORGE.Library.TablesCount" count=3}}</span></div><i class="fa-solid fa-chevron-right tf-row__chevron"></i></li>
+            {{#each rows}}
+            <li class="tf-row {{#if top}}tf-row--top{{/if}}">
+              <button type="button" class="tf-roll" tabindex="-1"><i class="fa-solid fa-dice-d20"></i></button>
+              <div class="tf-row__main"><span class="tf-row__name">{{name}}</span></div>
+              <span class="tf-row__formula">{{formula}}</span>
+              <span class="tf-row__count">{{count}}</span>
+              <span class="tf-row__rolls"></span>
+              <button type="button" class="tf-icon tf-fav" tabindex="-1"><i class="fa-solid fa-star"></i></button>
+              <span></span>
+            </li>
+            {{/each}}
+          </ol>
+          <ol class="tf-grid" hidden>
+            {{#each rows}}
+            <li class="tf-tile {{#if top}}tf-tile--top{{/if}}" data-key="{{@index}}">
+              <button type="button" class="tf-tile__roll" tabindex="-1">
+                <span class="tf-tile__corner"><span>{{formula}}</span><span>{{count}}</span></span>
+                <span class="tf-tile__mark"><i class="fa-solid fa-dice-d20"></i></span>
+                <span class="tf-tile__name">{{name}}</span>
+              </button>
+            </li>
+            {{/each}}
+          </ol>
+        </section>
+      </div>
+    </div>
+    <p class="tf-studio__label">{{localize "TABLEFORGE.Studio.PreviewCard"}}</p>
+    <div class="tf-preview-chat">{{{card}}}</div>
+  </div>
+
+  <footer class="tf-studio__footer">
+    <button type="button" data-action="reset"><i class="fa-solid fa-rotate-left"></i> {{localize "TABLEFORGE.Studio.Reset"}}</button>
+    <span></span>
+    <button type="button" data-action="cancel">{{localize "TABLEFORGE.Import.Cancel"}}</button>
+    <button type="button" class="tf-primary" data-action="save"><i class="fa-solid fa-check"></i> {{localize "TABLEFORGE.Studio.Save"}}</button>
+  </footer>
+</div>

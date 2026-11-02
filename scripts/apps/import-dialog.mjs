@@ -1,6 +1,6 @@
 import { MODULE_ID, TEMPLATES, t } from "../constants.mjs";
 import { planImport, toCreateData, contentHash, STATUS } from "../logic/import.mjs";
-import { currentTheme } from "../themes.mjs";
+import { decorate } from "../themes.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -62,7 +62,7 @@ export class ImportDialog extends HandlebarsApplicationMixin(ApplicationV2) {
   _onRender(context, options) {
     super._onRender?.(context, options);
     const root = this.element;
-    root.dataset.tfTheme = currentTheme().id;
+    decorate(root);
     const input = root.querySelector("input[type=file]");
     input?.addEventListener("change", () => this.#readFiles([...input.files]));
     const keep = root.querySelector("input[name=keepFolders]");

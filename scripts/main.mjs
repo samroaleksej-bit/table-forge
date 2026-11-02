@@ -4,6 +4,7 @@ import { TableLibrary } from "./apps/library.mjs";
 import { ImportDialog } from "./apps/import-dialog.mjs";
 import { rollTable, bindChatCard } from "./roll.mjs";
 import { ThemePicker } from "./apps/theme-picker.mjs";
+import { ThemeStudio } from "./apps/theme-studio.mjs";
 import { applyThemeToChat } from "./themes.mjs";
 
 Hooks.once("init", () => {
@@ -22,11 +23,13 @@ Hooks.once("init", () => {
     `${TEMPLATES}/library-list.hbs`,
     `${TEMPLATES}/import.hbs`,
     `${TEMPLATES}/chat-card.hbs`,
-    `${TEMPLATES}/theme-picker.hbs`
+    `${TEMPLATES}/theme-picker.hbs`,
+    `${TEMPLATES}/theme-studio.hbs`
   ]);
   game.modules.get(MODULE_ID).api = {
     openLibrary: () => TableLibrary.open(),
     chooseTheme: () => new ThemePicker().render({ force: true }),
+    openStudio: () => new ThemeStudio().render({ force: true }),
     openImport: () => new ImportDialog().render({ force: true }),
     rollTable
   };
@@ -55,7 +58,7 @@ for (const hook of ["createRollTable", "updateRollTable", "deleteRollTable", "cr
 }
 
 /* Смена темы: библиотека и карточки в чате перекрашиваются сразу */
-Hooks.on("tableForge.theme", (id) => {
+Hooks.on("tableForge.theme", () => {
   TableLibrary.refresh();
-  applyThemeToChat(id);
+  applyThemeToChat();
 });

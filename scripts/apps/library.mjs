@@ -6,7 +6,7 @@ import { escapeHTML } from "../logic/text.mjs";
 import { rollTable } from "../roll.mjs";
 import { ImportDialog } from "./import-dialog.mjs";
 import { ThemePicker } from "./theme-picker.mjs";
-import { currentTheme, themeChosen } from "../themes.mjs";
+import { currentTheme, currentView, themeChosen, decorate } from "../themes.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -277,8 +277,8 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
     const theme = currentTheme();
     return {
       isGM: game.user.isGM,
-      grid: theme.view === "grid",
-      keys: !!theme.keys,
+      grid: currentView(theme) === "grid",
+      keys: !!theme.keys && currentView(theme) === "grid",
       query: this.#query,
       mode: getSetting(SETTINGS.DEFAULT_MODE),
       specials: [
@@ -297,7 +297,7 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
       subfolders,
       rows: shown.map((e, i) => ({
         uuid: e.uuid,
-        key: theme.keys && i < 9 ? String(i + 1) : null,
+        key: theme.keys && currentView(theme) === "grid" && i < 9 ? String(i + 1) : null,
         name: e.name,
         img: usableImage(e.img, (id) => !!game.modules.get(id)?.active) ?? "icons/svg/d20-grey.svg",
         formula: e.formula || "—",
@@ -316,7 +316,7 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
   _onRender(context, options) {
     super._onRender?.(context, options);
     const root = this.element;
-    root.dataset.tfTheme = currentTheme().id;
+    decorate(root);
     if (!root.dataset.keysBound) {
       // Тема «Пульт»: цифры 1–9 бросают плитку, когда фокус не в поле ввода.
       root.dataset.keysBound = "1";

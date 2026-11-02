@@ -1,5 +1,6 @@
 import { MODULE_ID, SETTINGS, TEMPLATES, t } from "../constants.mjs";
-import { THEMES, currentTheme } from "../themes.mjs";
+import { THEMES, currentTheme, decorate } from "../themes.mjs";
+import { ThemeStudio } from "./theme-studio.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -15,7 +16,8 @@ export class ThemePicker extends HandlebarsApplicationMixin(ApplicationV2) {
     position: { width: 760, height: "auto" },
     actions: {
       pick: ThemePicker.#onPick,
-      confirm: ThemePicker.#onConfirm
+      confirm: ThemePicker.#onConfirm,
+      customize: ThemePicker.#onCustomize
     }
   };
 
@@ -53,7 +55,7 @@ export class ThemePicker extends HandlebarsApplicationMixin(ApplicationV2) {
 
   _onRender(context, options) {
     super._onRender?.(context, options);
-    this.element.dataset.tfTheme = this.#selected;
+    decorate(this.element, { theme: this.#selected, custom: {} });
   }
 
   static #onPick(event, target) {
@@ -68,6 +70,13 @@ export class ThemePicker extends HandlebarsApplicationMixin(ApplicationV2) {
     this.#onDone = null;
     await this.close();
     done?.(this.#selected);
+  }
+
+  /** Настроить выбранную тему в мастерской. */
+  static async #onCustomize() {
+    const theme = this.#selected;
+    await this.close();
+    new ThemeStudio({ theme }).render({ force: true });
   }
 
   async close(options) {

@@ -1,5 +1,6 @@
 import { MODULE_ID, SETTINGS } from "./constants.mjs";
 import { THEMES, DEFAULT_THEME } from "./themes.mjs";
+import { ThemeStudio } from "./apps/theme-studio.mjs";
 
 export function registerSettings() {
   game.settings.register(MODULE_ID, SETTINGS.DEFAULT_MODE, {
@@ -14,6 +15,14 @@ export function registerSettings() {
     },
     default: "gm"
   });
+  game.settings.registerMenu(MODULE_ID, "studio", {
+    name: "TABLEFORGE.Studio.Title",
+    label: "TABLEFORGE.Studio.Open",
+    hint: "TABLEFORGE.Studio.Hint",
+    icon: "fa-solid fa-sliders",
+    type: ThemeStudio,
+    restricted: false
+  });
   game.settings.register(MODULE_ID, SETTINGS.THEME, {
     name: "TABLEFORGE.Settings.Theme.Name",
     hint: "TABLEFORGE.Settings.Theme.Hint",
@@ -25,6 +34,11 @@ export function registerSettings() {
     onChange: (value) => Hooks.callAll("tableForge.theme", value)
   });
   game.settings.register(MODULE_ID, SETTINGS.THEME_CHOSEN, { scope: "client", config: false, type: Boolean, default: false });
+  // Личные настройки поверх темы из «Мастерской оформления».
+  game.settings.register(MODULE_ID, SETTINGS.CUSTOM, {
+    scope: "client", config: false, type: Object, default: {},
+    onChange: () => Hooks.callAll("tableForge.theme")
+  });
   // Избранное и недавние — у каждого пользователя свои (scope "user" есть с v13).
   game.settings.register(MODULE_ID, SETTINGS.FAVORITES, { scope: "user", config: false, type: Array, default: [] });
   game.settings.register(MODULE_ID, SETTINGS.RECENT, { scope: "user", config: false, type: Array, default: [] });

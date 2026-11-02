@@ -1,7 +1,7 @@
 import { MODULE_ID, SETTINGS, RECENT_LIMIT, TEMPLATES, api, t } from "./constants.mjs";
 import { getSetting, setSetting } from "./settings.mjs";
 import { inferFormula } from "./logic/formula.mjs";
-import { currentTheme } from "./themes.mjs";
+import { decorate } from "./themes.mjs";
 import { resultSourceHTML, usableImage, rollPosition, tidyLeftoverTags } from "./logic/results.mjs";
 
 /**
@@ -136,7 +136,7 @@ export function bindChatCard(message, html) {
   const card = html.querySelector?.(".tf-card");
   if (!card) return;
   // Тема карточки — тема того, кто смотрит, а не того, кто бросал.
-  card.dataset.tfTheme = currentTheme().id;
+  decorate(card);
   const canEdit = game.user.isGM || message.isAuthor;
   const whispered = message.whisper?.length > 0;
   for (const btn of card.querySelectorAll("[data-tf-action]")) {

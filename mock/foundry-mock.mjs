@@ -339,6 +339,7 @@ globalThis.game = {
   modules: new Collection([["table-forge", { id: "table-forge", active: true }]]),
   settings: {
     register(ns, key, def) { settingsDefs.set(`${ns}.${key}`, def); },
+    registerMenu() {},
     get(ns, key) { const k = `${ns}.${key}`; return structuredClone(settingsValues.has(k) ? settingsValues.get(k) : settingsDefs.get(k)?.default); },
     async set(ns, key, value) { settingsValues.set(`${ns}.${key}`, structuredClone(value)); settingsDefs.get(`${ns}.${key}`)?.onChange?.(value); return value; }
   },

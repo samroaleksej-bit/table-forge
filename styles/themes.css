@@ -137,32 +137,32 @@
 
 /* ===================== Поверхности тем (кроме «Кузницы») ===================== */
 
-.table-forge[data-tf-theme]:not([data-tf-theme="forge"]) .window-content {
+.table-forge:is([data-tf-theme]:not([data-tf-theme="forge"]), [data-tf-custom-bg]) .window-content {
   background: var(--tf-bg);
   color: var(--tf-text);
   font-family: var(--tf-font);
 }
-.table-forge[data-tf-theme]:not([data-tf-theme="forge"]) .window-content :is(input, select, button:not(.tf-roll):not(.tf-primary):not(.tf-icon):not(.tf-tile__roll):not(.tf-option)) {
+.table-forge:is([data-tf-theme]:not([data-tf-theme="forge"]), [data-tf-custom-bg]) .window-content :is(input, select, button:not(.tf-roll):not(.tf-primary):not(.tf-icon):not(.tf-tile__roll):not(.tf-option)) {
   background: var(--tf-control);
   color: var(--tf-text);
   border: 1px solid var(--tf-line);
   border-radius: var(--tf-radius);
   font-family: var(--tf-font);
 }
-.table-forge[data-tf-theme]:not([data-tf-theme="forge"]) :is(.tf-status, .tf-crumbs) { background: var(--tf-bg); }
-.table-forge[data-tf-theme]:not([data-tf-theme="forge"]) .tf-search { background: var(--tf-control); }
-.table-forge[data-tf-theme]:not([data-tf-theme="forge"]) .tf-search input { border: none; background: transparent; }
-.table-forge[data-tf-theme]:not([data-tf-theme="forge"]) a { color: inherit; }
+.table-forge:is([data-tf-theme]:not([data-tf-theme="forge"]), [data-tf-custom-bg]) :is(.tf-status, .tf-crumbs) { background: var(--tf-bg); }
+.table-forge:is([data-tf-theme]:not([data-tf-theme="forge"]), [data-tf-custom-bg]) .tf-search { background: var(--tf-control); }
+.table-forge:is([data-tf-theme]:not([data-tf-theme="forge"]), [data-tf-custom-bg]) .tf-search input { border: none; background: transparent; }
+.table-forge:is([data-tf-theme]:not([data-tf-theme="forge"]), [data-tf-custom-bg]) a { color: inherit; }
 
 /* Карточка в чате получает собственный фон темы */
-.tf-card[data-tf-theme]:not([data-tf-theme="forge"]) {
+.tf-card:is([data-tf-theme]:not([data-tf-theme="forge"]), [data-tf-custom-bg]) {
   padding: 10px 12px 12px;
   border-radius: var(--tf-radius);
   background: var(--tf-bg);
   color: var(--tf-text);
   font-family: var(--tf-font);
 }
-.tf-card[data-tf-theme]:not([data-tf-theme="forge"]) .tf-card__actions button {
+.tf-card:is([data-tf-theme]:not([data-tf-theme="forge"]), [data-tf-custom-bg]) .tf-card__actions button {
   background: var(--tf-control);
   color: var(--tf-text);
   border: 1px solid var(--tf-line);
@@ -170,8 +170,8 @@
   font-family: var(--tf-font);
 }
 .tf-card[data-tf-theme] .tf-card__title h3 { font-family: var(--tf-font-display, "Modesto Condensed", Georgia, serif); }
-.tf-card[data-tf-theme]:not([data-tf-theme="forge"]) a.content-link,
-.tf-card[data-tf-theme]:not([data-tf-theme="forge"]) a.inline-roll { color: var(--tf-text); }
+.tf-card:is([data-tf-theme]:not([data-tf-theme="forge"]), [data-tf-custom-bg]) a.content-link,
+.tf-card:is([data-tf-theme]:not([data-tf-theme="forge"]), [data-tf-custom-bg]) a.inline-roll { color: var(--tf-text); }
 
 /* ============================ Плитки (общее) ============================ */
 
@@ -205,11 +205,11 @@
   transition: transform 120ms var(--tf-ease-out), box-shadow 150ms ease;
 }
 .tf-tile__roll:active { transform: scale(0.97); }
-.tf-tile__corner { display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 12px; font-weight: 700; color: var(--tf-muted); font-variant-numeric: tabular-nums; }
-.tf-tile__corner kbd { font: inherit; font-size: 12px; padding: 1px 7px; border-radius: 6px; background: var(--tf-bg); color: var(--tf-muted); border: 1px solid var(--tf-line); }
-.tf-tile__mark { flex: 1; display: grid; place-items: center; font-size: 28px; color: var(--tf-accent); opacity: 0.85; }
-.tf-tile__name { font-size: 14px; font-weight: 700; overflow-wrap: break-word; hyphens: auto; }
-.tf-tile__where { font-size: 11px; color: var(--tf-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tf-tile__corner { display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: calc(12px * var(--tf-scale, 1)); font-weight: 700; color: var(--tf-muted); font-variant-numeric: tabular-nums; }
+.tf-tile__corner kbd { font: inherit; font-size: calc(12px * var(--tf-scale, 1)); padding: 1px 7px; border-radius: 6px; background: var(--tf-bg); color: var(--tf-muted); border: 1px solid var(--tf-line); }
+.tf-tile__mark { flex: 1; display: grid; place-items: center; font-size: calc(28px * var(--tf-scale, 1)); color: var(--tf-accent); opacity: 0.85; }
+.tf-tile__name { font-size: calc(14px * var(--tf-scale, 1)); font-weight: 700; overflow-wrap: break-word; hyphens: auto; }
+.tf-tile__where { font-size: calc(11px * var(--tf-scale, 1)); color: var(--tf-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tf-tile__tools { position: absolute; top: 30px; right: 6px; display: flex; flex-direction: column; }
 .tf-tile--top .tf-tile__roll { box-shadow: 0 0 0 2px var(--tf-accent); }
 @media (hover: hover) and (pointer: fine) {
@@ -236,10 +236,10 @@
 /* ============================ Гримуар ============================ */
 
 [data-tf-theme="grimoire"] .tf-node,
-[data-tf-theme="grimoire"] .tf-row__name { font-size: 15px; }
+[data-tf-theme="grimoire"] .tf-row__name { font-size: calc(15px * var(--tf-scale, 1)); }
 [data-tf-theme="grimoire"] .tf-row__name,
 [data-tf-theme="grimoire"] .tf-crumb.current,
-[data-tf-theme="grimoire"] .tf-preview header strong { font-family: var(--tf-font-display); font-size: 17px; letter-spacing: 0.01em; }
+[data-tf-theme="grimoire"] .tf-preview header strong { font-family: var(--tf-font-display); font-size: calc(17px * var(--tf-scale, 1)); letter-spacing: 0.01em; }
 [data-tf-theme="grimoire"] .tf-tree h4,
 [data-tf-theme="grimoire"] .tf-row__where,
 [data-tf-theme="grimoire"] .tf-status { font-style: italic; }
@@ -249,8 +249,8 @@
 [data-tf-theme="grimoire"] .tf-folder-icon,
 [data-tf-theme="grimoire"] .tf-row__folder-icon { color: #8c6a3c; }
 [data-tf-theme="grimoire"].tf-card { border: 1px solid #d9c7a2; box-shadow: inset 0 0 0 3px #f4ead3, inset 0 0 0 4px #d9c7a2; }
-[data-tf-theme="grimoire"] .tf-card__title h3 { font-size: 21px; color: #7a1f1f; }
-[data-tf-theme="grimoire"] .tf-card__text { font-size: 17px; line-height: 1.35; }
+[data-tf-theme="grimoire"] .tf-card__title h3 { font-size: calc(21px * var(--tf-scale, 1)); color: #7a1f1f; }
+[data-tf-theme="grimoire"] .tf-card__text { font-size: calc(17px * var(--tf-scale, 1)); line-height: 1.35; }
 
 /* ============================ Колода ============================ */
 
@@ -263,9 +263,9 @@
   box-shadow: inset 0 0 0 5px var(--tf-ivory), inset 0 0 0 6px var(--tf-brass), 0 8px 18px rgba(0, 0, 0, 0.35);
   text-align: center;
 }
-[data-tf-theme="deck"] .tf-tile__corner { color: var(--tf-suit); font-family: var(--tf-font-display); font-size: 14px; }
-[data-tf-theme="deck"] .tf-tile__mark { color: var(--tf-suit); font-size: 34px; }
-[data-tf-theme="deck"] .tf-tile__name { font-family: var(--tf-font-display); font-size: 15px; }
+[data-tf-theme="deck"] .tf-tile__corner { color: var(--tf-suit); font-family: var(--tf-font-display); font-size: calc(14px * var(--tf-scale, 1)); }
+[data-tf-theme="deck"] .tf-tile__mark { color: var(--tf-suit); font-size: calc(34px * var(--tf-scale, 1)); }
+[data-tf-theme="deck"] .tf-tile__name { font-family: var(--tf-font-display); font-size: calc(15px * var(--tf-scale, 1)); }
 [data-tf-theme="deck"] .tf-tile__where { color: #6b6178; }
 [data-tf-theme="deck"] .tf-tile .tf-icon { color: #6b6178; }
 [data-tf-theme="deck"] .tf-tile--top .tf-tile__roll { box-shadow: inset 0 0 0 5px var(--tf-ivory), inset 0 0 0 6px var(--tf-brass), 0 0 0 3px var(--tf-accent), 0 14px 26px rgba(0, 0, 0, 0.5); }
@@ -286,7 +286,7 @@
   --tf-text: #221c2e;
   --tf-accent: #8a2e3b;
 }
-[data-tf-theme="deck"] .tf-card__title h3 { font-size: 20px; }
+[data-tf-theme="deck"] .tf-card__title h3 { font-size: calc(20px * var(--tf-scale, 1)); }
 [data-tf-theme="deck"] .tf-coin { border-radius: 10px; background: var(--tf-suit, #8a2e3b); color: #f3eee3; border: none; box-shadow: none; }
 
 /* ============================ Терминал ============================ */
@@ -313,14 +313,14 @@
 [data-tf-theme="terminal"] .tf-coin { border-radius: 0; background: var(--tf-accent); border: none; box-shadow: none; }
 [data-tf-theme="terminal"] .tf-ruler__track { border-radius: 0; }
 [data-tf-theme="terminal"].tf-card { border: 1px solid var(--tf-accent); box-shadow: 4px 4px 0 #ff4d3d; }
-[data-tf-theme="terminal"] .tf-card__title h3 { font-size: 15px; text-transform: none; }
+[data-tf-theme="terminal"] .tf-card__title h3 { font-size: calc(15px * var(--tf-scale, 1)); text-transform: none; }
 
 /* ============================ Пульт ============================ */
 
 [data-tf-theme="console"] .tf-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
 [data-tf-theme="console"] .tf-tile__roll { min-height: 130px; background: var(--tf-control); border-color: var(--tf-line); }
-[data-tf-theme="console"] .tf-tile__mark { justify-items: start; font-size: 18px; }
-[data-tf-theme="console"] .tf-tile__name { font-size: 16px; color: #f2f4f7; }
+[data-tf-theme="console"] .tf-tile__mark { justify-items: start; font-size: calc(18px * var(--tf-scale, 1)); }
+[data-tf-theme="console"] .tf-tile__name { font-size: calc(16px * var(--tf-scale, 1)); color: #f2f4f7; }
 [data-tf-theme="console"] .tf-tile--top .tf-tile__roll,
 [data-tf-theme="console"] .tf-tile[data-key="1"] .tf-tile__roll { border: 2px solid var(--tf-brass); }
 [data-tf-theme="console"] .tf-roll { border: none; box-shadow: none; }
@@ -331,7 +331,7 @@
 
 .tf-theme-picker .window-content { padding: 14px; }
 .tf-picker { display: flex; flex-direction: column; gap: 14px; }
-.tf-picker__lead { margin: 0; font-size: 14px; }
+.tf-picker__lead { margin: 0; font-size: calc(14px * var(--tf-scale, 1)); }
 .tf-picker__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .tf-option {
   width: 100%;
@@ -352,8 +352,8 @@
 }
 .tf-option:active { transform: scale(0.98); }
 .tf-option.selected { border-color: var(--tf-accent); box-shadow: 0 0 0 3px var(--tf-accent-soft); }
-.tf-option__name { margin-top: 4px; font-size: 15px; font-weight: 700; }
-.tf-option__hint { font-size: 12px; color: var(--tf-muted); }
+.tf-option__name { margin-top: 4px; font-size: calc(15px * var(--tf-scale, 1)); font-weight: 700; }
+.tf-option__hint { font-size: calc(12px * var(--tf-scale, 1)); color: var(--tf-muted); }
 .tf-picker__footer { display: flex; align-items: center; gap: 12px; }
 .tf-picker__footer .tf-hint { flex: 1; color: var(--tf-muted); }
 .tf-picker__footer button { width: auto; padding: 0 16px; min-height: 36px; }
@@ -404,7 +404,7 @@
   border-radius: 50%;
   background: radial-gradient(circle, var(--tf-brass-hi) 0%, var(--tf-brass) 62%, var(--tf-brass-lo) 100%);
   color: var(--tf-coin-ink, #2a1d05);
-  font-size: 13px;
+  font-size: calc(13px * var(--tf-scale, 1));
   font-weight: 800;
 }
 .tf-mini[data-tf-theme="terminal"] .tf-mini__coin,
@@ -416,3 +416,61 @@
   .tf-option:active { transform: none; }
   [data-tf-theme="deck"] .tf-tile__roll:hover { transform: none; }
 }
+
+/* ============================ Мастерская: личные настройки ============================ */
+
+/* Свой фон и текст работают и в «Кузнице», которая иначе берёт фон у Foundry */
+.table-forge[data-tf-custom-bg] .window-content { background: var(--tf-bg); }
+.table-forge[data-tf-custom-bg] :is(.tf-status, .tf-crumbs) { background: var(--tf-bg); }
+.table-forge[data-tf-custom-text] .window-content { color: var(--tf-text); }
+.tf-card[data-tf-custom-bg] {
+  padding: 10px 12px 12px;
+  border-radius: var(--tf-radius);
+  background: var(--tf-bg);
+}
+.tf-card[data-tf-custom-text] { color: var(--tf-text); }
+
+/* Плотность списка */
+[data-tf-density="compact"] .tf-row { min-height: 32px; padding-top: 1px; padding-bottom: 1px; }
+[data-tf-density="compact"] .tf-node { min-height: 23px; }
+[data-tf-density="compact"] .tf-roll { width: 26px; height: 26px; }
+[data-tf-density="compact"] .tf-tile__roll { min-height: 110px; }
+[data-tf-density="spacious"] .tf-row { min-height: 54px; padding-top: 8px; padding-bottom: 8px; }
+[data-tf-density="spacious"] .tf-node { min-height: 34px; }
+[data-tf-density="spacious"] .tf-tile__roll { min-height: 190px; }
+
+/* Анимации выключены */
+[data-tf-motion="off"],
+[data-tf-motion="off"] * { animation: none !important; transition: none !important; }
+
+/* ============================ Окно мастерской ============================ */
+
+.tf-studio-app .window-content { padding: 0; }
+.tf-studio { display: grid; grid-template-columns: 300px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; height: 100%; min-height: 0; }
+.tf-studio__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  overflow-y: auto;
+  border-right: 1px solid var(--tf-line);
+  background: var(--tf-panel);
+}
+.tf-studio__controls fieldset { margin: 0; padding: 0; border: none; display: flex; flex-direction: column; gap: 8px; }
+.tf-studio__controls legend { padding: 0; margin-bottom: 4px; font-weight: 700; font-size: calc(13px * var(--tf-scale, 1)); }
+.tf-field { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; font-size: calc(13px * var(--tf-scale, 1)); }
+.tf-field select { width: 150px; }
+.tf-field input[type="color"] { width: 44px; height: 28px; padding: 0 2px; border: 1px solid var(--tf-line); border-radius: 4px; background: none; cursor: pointer; }
+.tf-field input[type="range"] { width: 150px; }
+.tf-field output { grid-column: 2; justify-self: end; font-size: calc(11px * var(--tf-scale, 1)); color: var(--tf-muted); font-variant-numeric: tabular-nums; }
+.tf-contrast { margin: 0; padding: 6px 8px; border-radius: 6px; font-size: calc(12px * var(--tf-scale, 1)); background: var(--tf-accent-soft); }
+.tf-contrast.tf-bad { background: rgba(178, 51, 47, 0.16); }
+.tf-studio__preview { display: flex; flex-direction: column; gap: 14px; padding: 14px; overflow-y: auto; background: repeating-conic-gradient(rgba(127, 127, 127, 0.08) 0 25%, transparent 0 50%) 0 0 / 16px 16px; }
+.tf-studio__label { margin: 0; font-size: calc(12px * var(--tf-scale, 1)); font-weight: 700; color: var(--tf-muted); }
+.tf-preview-lib { border: 1px solid var(--tf-line); border-radius: 8px; overflow: hidden; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); }
+.tf-preview-lib .window-content { display: block; padding: 0; overflow: visible; }
+.tf-preview-lib .tf-grid { padding: 10px; }
+.tf-preview-chat { width: 300px; padding: 8px; border-radius: 6px; background: var(--color-bg, #1c1b1a); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); }
+.tf-studio__footer { grid-column: 1 / -1; display: flex; gap: 8px; align-items: center; padding: 10px 14px; border-top: 1px solid var(--tf-line); }
+.tf-studio__footer span { flex: 1; }
+.tf-studio__footer button { width: auto; padding: 0 14px; min-height: 34px; }
