@@ -20,9 +20,16 @@
       "EmptyFolder": "Здесь пока пусто.",
       "NoTables": "В мире ещё нет таблиц.",
       "Truncated": "Показаны первые 300. Уточните поиск.",
-      "Found": "Найдено",
+      "Found": "Таблиц",
       "EnterHint": "бросить первую",
-      "PreviewMore": "…и ещё {count}"
+      "PreviewMore": "…и ещё {count}",
+      "Expand": "Развернуть или свернуть",
+      "Path": "Путь",
+      "Up": "Наверх (Backspace)",
+      "SearchingIn": "поиск здесь и в подпапках",
+      "SearchAll": "Искать во всех таблицах",
+      "TablesCount": "таблиц: {count}",
+      "FoldersCount": "папок: {count}"
     },
     "Mode": {
       "gm": "Только мастеру",

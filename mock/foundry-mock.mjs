@@ -212,6 +212,14 @@ class Folder extends MockDocument {
 
 class TableResult extends MockDocument {
   toObject() { return structuredClone({ ...this }); }
+  /** Как TableResult#getHTML в v13+: через него работают обогатители систем и модулей. */
+  async getHTML() {
+    let html = this.description ?? "";
+    if (this.type === "document" && this.documentUuid) html = `@UUID[${this.documentUuid}]{${this.name}}` + html;
+    // Имитация контент-модуля, который подключается к getHTML: @creature[wraith] → ссылка на актёра
+    html = html.replace(/@creature\[([^\]|]+)[^\]]*\]/g, (_, n) => `<a class="content-link"><i class="fa-solid fa-user"></i> ${n === "wraith" ? "Умертвие" : n}</a>`);
+    return TextEditor.enrichHTML(html);
+  }
 }
 
 class RollTable extends MockDocument {
@@ -409,6 +417,17 @@ window.tfMock = {
     await RollTable.createDocuments(items.map((i, n) => ({ ...toCreateData(i, "table-forge", i.folder), ownership: { default: n % 4 === 0 ? 2 : ownership } })));
     return items.length;
   },
+  /** Вложенные папки и таблица с @creature — для проверки дерева и обогащения. */
+  async addExtras() {
+    const [root] = await Folder.createDocuments([{ name: "Сокровища", type: "RollTable" }]);
+    for (const f of game.folders) if (/^(Драгоценный камень|Предметы искусства)/.test(f.name)) f.parent = root.id;
+    const [sub] = await Folder.createDocuments([{ name: "Мелочь", type: "RollTable", folder: root.id }]);
+    await RollTable.createDocuments([{
+      name: "К30. Королевский счетовод", formula: "1d4", folder: sub.id, replacement: true,
+      results: [1, 2, 3, 4].map((n) => ({ _id: `r${n}`, type: "text", range: [n, n], weight: 1, name: "",
+        description: n === 4 ? "1 @creature[wraith] and [[/r 1d4 + 1]] @creature[Specter||specters]" : `${n} @creature[wraith]` }))
+    }]);
+  },
   async addPack() {
     const files = (await loadFiles()).slice(0, 3);
     const tables = await Promise.all(files.map(async (f) => JSON.parse(await f.text())));
@@ -425,5 +444,5 @@ Hooks.callAll("init");
 Hooks.callAll("ready");
 const sidebar = document.getElementById("tables-directory");
 Hooks.callAll("renderRollTableDirectory", {}, sidebar, {});
-if (params.has("seed")) { await tfMock.addPack(); await tfMock.seedWorld(); }
+if (params.has("seed")) { await tfMock.addPack(); await tfMock.seedWorld(); await tfMock.addExtras(); }
 window.tfMockReady = true;

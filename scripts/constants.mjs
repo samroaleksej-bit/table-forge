@@ -4,7 +4,8 @@ export const TEMPLATES = `modules/${MODULE_ID}/templates`;
 export const SETTINGS = {
   DEFAULT_MODE: "defaultMode",
   FAVORITES: "favorites",
-  RECENT: "recent"
+  RECENT: "recent",
+  EXPANDED: "expandedFolders"
 };
 
 export const RECENT_LIMIT = 15;

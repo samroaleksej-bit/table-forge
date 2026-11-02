@@ -16,6 +16,8 @@ export function registerSettings() {
   // Избранное и недавние — у каждого пользователя свои (scope "user" есть с v13).
   game.settings.register(MODULE_ID, SETTINGS.FAVORITES, { scope: "user", config: false, type: Array, default: [] });
   game.settings.register(MODULE_ID, SETTINGS.RECENT, { scope: "user", config: false, type: Array, default: [] });
+  // Раскрытые папки дерева — удобство конкретного браузера.
+  game.settings.register(MODULE_ID, SETTINGS.EXPANDED, { scope: "client", config: false, type: Array, default: [] });
 }
 
 export const getSetting = (key) => game.settings.get(MODULE_ID, key);

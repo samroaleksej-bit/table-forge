@@ -20,9 +20,16 @@
       "EmptyFolder": "Nothing here yet.",
       "NoTables": "This world has no tables yet.",
       "Truncated": "Showing the first 300. Refine your search.",
-      "Found": "Found",
+      "Found": "Tables",
       "EnterHint": "rolls the top one",
-      "PreviewMore": "…and {count} more"
+      "PreviewMore": "…and {count} more",
+      "Expand": "Expand or collapse",
+      "Path": "Path",
+      "Up": "Up (Backspace)",
+      "SearchingIn": "searching here and in subfolders",
+      "SearchAll": "Search all tables",
+      "TablesCount": "tables: {count}",
+      "FoldersCount": "folders: {count}"
     },
     "Mode": {
       "gm": "GM only",

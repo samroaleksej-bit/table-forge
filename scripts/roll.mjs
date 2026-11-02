@@ -1,7 +1,7 @@
 import { MODULE_ID, SETTINGS, RECENT_LIMIT, TEMPLATES, api, t } from "./constants.mjs";
 import { getSetting, setSetting } from "./settings.mjs";
 import { inferFormula } from "./logic/formula.mjs";
-import { resultSourceHTML, usableImage, rollPosition } from "./logic/results.mjs";
+import { resultSourceHTML, usableImage, rollPosition, tidyLeftoverTags } from "./logic/results.mjs";
 
 /**
  * Бросок таблицы в один клик → карточка модуля в чате.
@@ -74,16 +74,36 @@ function documentExists(uuid) {
 
 const moduleActive = (id) => !!game.modules.get(id)?.active || game.system.id === id;
 
+/**
+ * HTML одного результата. Обогащаем один раз при создании: инлайн-броски [[...]] вычисляются
+ * и сохраняются в сообщении.
+ *
+ * Основной путь — TableResult#getHTML() ядра (v13+): ровно так результат рисует сам Foundry,
+ * и через него работают обогатители систем и модулей (например, @creature[...] у контент-модулей).
+ * Ссылку на отсутствующий документ рисуем сами — аккуратной подписью вместо битой ссылки.
+ */
+async function resultHTML(result, table) {
+  const enrich = (html) => api.TextEditor.enrichHTML(html, { rolls: true, documents: true, links: true, relativeTo: result ?? table });
+  const missingDoc = result.type === "document" && result.documentUuid && !documentExists(result.documentUuid);
+  let html = null;
+  if (!missingDoc && typeof result.getHTML === "function") {
+    try {
+      html = await result.getHTML();
+    } catch (err) {
+      console.warn(`${MODULE_ID} | getHTML() результата не сработал, рисуем сами`, err);
+    }
+  }
+  html ??= await enrich(resultSourceHTML(result, documentExists));
+  return tidyLeftoverTags(html);
+}
+
 export async function renderCard(table, { roll, results }) {
-  const TextEditor = api.TextEditor;
-  // Обогащаем один раз при создании: инлайн-броски [[...]] вычисляются и сохраняются в сообщении.
   const rows = [];
   for (const result of results) {
-    const source = resultSourceHTML(result, documentExists);
     rows.push({
       img: usableImage(result.img, moduleActive),
       range: result.range?.[0] === result.range?.[1] ? `${result.range[0]}` : `${result.range?.[0]}–${result.range?.[1]}`,
-      html: await TextEditor.enrichHTML(source, { rolls: true, documents: true, links: true, relativeTo: table })
+      html: await resultHTML(result, table)
     });
   }
   return api.renderTemplate(`${TEMPLATES}/chat-card.hbs`, {

@@ -105,3 +105,13 @@ test("rollPosition: шкала диапазона", async () => {
   assert.equal(rollPosition([{ range: [1, 1] }], 1), null);
   assert.equal(rollPosition([], 3), null);
 });
+
+test("tidyLeftoverTags: необработанные теги → подпись", async () => {
+  const { tidyLeftoverTags } = await import("../scripts/logic/results.mjs");
+  const out = tidyLeftoverTags("1 @creature[wraith] and @creature[Specter||specters]");
+  assert.match(out, />wraith<\/span>/);
+  assert.match(out, />specters<\/span>/);
+  assert.doesNotMatch(out, /@creature\[/);
+  assert.equal(tidyLeftoverTags('<a data-uuid="Compendium.x.y">Меч</a>'), '<a data-uuid="Compendium.x.y">Меч</a>');
+  assert.equal(tidyLeftoverTags("@UUID[Actor.abc]"), "@UUID[Actor.abc]");
+});

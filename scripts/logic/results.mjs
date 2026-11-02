@@ -67,3 +67,16 @@ export function rollPosition(results = [], total) {
   const pos = Math.min(1, Math.max(0, (total - min) / (max - min)));
   return { min, max, pos: Number(pos.toFixed(3)) };
 }
+
+/**
+ * Теги, которые никто не обработал (в мире нет модуля-обработчика): @creature[Specter||specters].
+ * Вместо сырой разметки показываем подпись: последнюю непустую часть через «|».
+ * Ссылки @UUID[...]{...} к этому моменту уже превращены в <a>, их не трогаем.
+ */
+export function tidyLeftoverTags(html) {
+  return String(html ?? "").replace(/@([a-zA-Z]+)\[([^\]]+)\](?!\{)/g, (whole, type, body) => {
+    if (type === "UUID") return whole;
+    const label = body.split("|").map((s) => s.trim()).filter(Boolean).pop() ?? body;
+    return `<span class="tf-tag" data-tooltip="${escapeHTML(`@${type}: ${body}`)}">${escapeHTML(label)}</span>`;
+  });
+}

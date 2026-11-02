@@ -1,29 +1,58 @@
 <section class="tf-list">
+  <nav class="tf-crumbs" aria-label="{{localize "TABLEFORGE.Library.Path"}}">
+    <button type="button" class="tf-up" data-action="goUp" data-folder="{{up}}" {{#unless up}}disabled{{/unless}} data-tooltip="{{localize "TABLEFORGE.Library.Up"}}" aria-label="{{localize "TABLEFORGE.Library.Up"}}"><i class="fa-solid fa-arrow-up"></i></button>
+    <ol>
+      {{#each crumbs}}
+      <li>
+        {{#if current}}<span class="tf-crumb current" aria-current="page">{{label}}</span>
+        {{else if id}}<a class="tf-crumb" data-action="selectFolder" data-folder="{{id}}">{{label}}</a>
+        {{else}}<span class="tf-crumb">{{label}}</span>{{/if}}
+      </li>
+      {{/each}}
+    </ol>
+    {{#if canSearchAll}}<span class="tf-crumbs__search"><i class="fa-solid fa-magnifying-glass"></i> {{localize "TABLEFORGE.Library.SearchingIn"}}</span>{{/if}}
+  </nav>
+
   {{#if empty}}
     <div class="tf-empty">
       {{#if query}}
+        <i class="fa-solid fa-magnifying-glass"></i>
         <p>{{localize "TABLEFORGE.Library.NothingFound"}}</p>
-        <button type="button" data-action="clearSearch">{{localize "TABLEFORGE.Library.ClearSearch"}}</button>
+        <div class="tf-empty__actions">
+          {{#if canSearchAll}}<button type="button" class="tf-primary" data-action="searchAll"><i class="fa-solid fa-layer-group"></i> {{localize "TABLEFORGE.Library.SearchAll"}}</button>{{/if}}
+          <button type="button" data-action="clearSearch">{{localize "TABLEFORGE.Library.ClearSearch"}}</button>
+        </div>
       {{else if hasAny}}
+        <i class="fa-regular fa-folder-open"></i>
         <p>{{localize "TABLEFORGE.Library.EmptyFolder"}}</p>
       {{else}}
+        <i class="fa-solid fa-dice-d20"></i>
         <p>{{localize "TABLEFORGE.Library.NoTables"}}</p>
-        {{#if isGM}}<button type="button" data-action="openImport"><i class="fa-solid fa-file-import"></i> {{localize "TABLEFORGE.Import.Button"}}</button>{{/if}}
+        {{#if isGM}}<button type="button" class="tf-primary" data-action="openImport"><i class="fa-solid fa-file-import"></i> {{localize "TABLEFORGE.Import.Button"}}</button>{{/if}}
       {{/if}}
     </div>
   {{else}}
     <ol class="tf-rows">
+      {{#each subfolders}}
+      <li class="tf-row tf-row--folder" data-action="selectFolder" data-folder="{{id}}" tabindex="0" role="button">
+        <span class="tf-row__folder-icon"><i class="fa-solid fa-folder" {{#if color}}style="color: {{color}}"{{/if}}></i></span>
+        <div class="tf-row__main">
+          <span class="tf-row__name">{{name}}</span>
+          <span class="tf-row__where">{{localize "TABLEFORGE.Library.TablesCount" count=count}}{{#if sub}}, {{localize "TABLEFORGE.Library.FoldersCount" count=sub}}{{/if}}</span>
+        </div>
+        <i class="fa-solid fa-chevron-right tf-row__chevron"></i>
+      </li>
+      {{/each}}
       {{#each rows}}
       <li class="tf-row{{#if @first}}{{#if @root.query}} tf-row--top{{/if}}{{/if}}" data-uuid="{{uuid}}">
         <button type="button" class="tf-roll" data-action="roll" data-tooltip="{{localize "TABLEFORGE.Library.Roll"}}" aria-label="{{localize "TABLEFORGE.Library.Roll"}}"><i class="fa-solid fa-dice-d20"></i></button>
-        <img class="tf-row__img" src="{{img}}" alt="" loading="lazy">
         <div class="tf-row__main">
           <span class="tf-row__name">{{name}}</span>
-          {{#if where}}<span class="tf-row__where">{{where}}</span>{{/if}}
+          {{#if where}}<span class="tf-row__where"><i class="fa-regular fa-folder"></i> {{where}}</span>{{/if}}
         </div>
         <span class="tf-row__formula">{{formula}}</span>
         <span class="tf-row__count" data-tooltip="{{localize "TABLEFORGE.Library.ResultsCount"}}">{{count}}</span>
-        <span class="tf-row__rolls" data-tooltip="{{localize "TABLEFORGE.Library.RollCount"}}">{{#if rollCount}}<i class="fa-solid fa-dice"></i> {{rollCount}}{{/if}}</span>
+        <span class="tf-row__rolls" data-tooltip="{{localize "TABLEFORGE.Library.RollCount"}}">{{#if rollCount}}<i class="fa-solid fa-dice"></i>{{rollCount}}{{/if}}</span>
         <button type="button" class="tf-icon {{#if fav}}tf-fav{{/if}}" data-action="toggleFavorite" data-tooltip="{{localize "TABLEFORGE.Library.Favorite"}}" aria-label="{{localize "TABLEFORGE.Library.Favorite"}}"><i class="{{#if fav}}fa-solid{{else}}fa-regular{{/if}} fa-star"></i></button>
         <button type="button" class="tf-icon" data-action="openSheet" data-tooltip="{{localize "TABLEFORGE.Library.Open"}}" aria-label="{{localize "TABLEFORGE.Library.Open"}}"><i class="fa-solid fa-pen-to-square"></i></button>
       </li>

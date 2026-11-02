@@ -16,9 +16,12 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
     id: "table-forge-library",
     classes: ["table-forge", "tf-library"],
     window: { title: "TABLEFORGE.Library.Title", icon: "fa-solid fa-table-list", resizable: true },
-    position: { width: 880, height: 640 },
+    position: { width: 980, height: 660 },
     actions: {
       selectFolder: TableLibrary.#onSelectFolder,
+      toggleExpand: TableLibrary.#onToggleExpand,
+      goUp: TableLibrary.#onGoUp,
+      searchAll: TableLibrary.#onSearchAll,
       roll: TableLibrary.#onRoll,
       toggleFavorite: TableLibrary.#onToggleFavorite,
       openSheet: TableLibrary.#onOpenSheet,
@@ -53,7 +56,7 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
     app.#refreshDebounced();
   }
 
-  #folder = "all";
+  #folder = "root";
   #query = "";
   #worldEntries = null;
   #packEntries = null;
@@ -116,62 +119,69 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
     return (this.#packEntries = entries);
   }
 
-  #folderTree(entries) {
-    const counts = new Map();
-    for (const e of entries) if (!e.pack) counts.set(e.folderId, (counts.get(e.folderId) ?? 0) + 1);
-    const folders = game.folders.filter((f) => f.type === "RollTable" && f.visible !== false);
-    const byParent = new Map();
+  /** Модель папок мира: прямые счётчики, дети, итоги с подпапками, путь к корню. */
+  #folderModel(world) {
+    const direct = new Map();
+    for (const e of world) direct.set(e.folderId, (direct.get(e.folderId) ?? 0) + 1);
+    const folders = game.folders.filter((f) => f.type === "RollTable");
+    const byId = new Map(folders.map((f) => [f.id, f]));
+    const children = new Map();
     for (const f of folders) {
       const parent = f.folder?.id ?? null;
-      if (!byParent.has(parent)) byParent.set(parent, []);
-      byParent.get(parent).push(f);
+      if (!children.has(parent)) children.set(parent, []);
+      children.get(parent).push(f);
     }
-    // Игрок не видит папки, в которых (вместе с подпапками) нет доступных ему таблиц.
-    const total = (id) => (counts.get(id) ?? 0) + (byParent.get(id) ?? []).reduce((sum, f) => sum + total(f.id), 0);
-    const out = [];
-    const walk = (parent, depth) => {
-      const children = (byParent.get(parent) ?? []).sort((a, b) => (a.sort - b.sort) || a.name.localeCompare(b.name));
-      for (const f of children) {
-        if (!game.user.isGM && !total(f.id)) continue;
-        out.push({ id: f.id, name: f.name, depth, indent: depth * 12, color: f.color?.css ?? f.color ?? null, count: counts.get(f.id) ?? 0, active: this.#folder === f.id });
-        walk(f.id, depth + 1);
-      }
+    const memo = new Map();
+    const total = (id) => {
+      if (!memo.has(id)) memo.set(id, (direct.get(id) ?? 0) + (children.get(id) ?? []).reduce((sum, f) => sum + total(f.id), 0));
+      return memo.get(id);
     };
-    walk(null, 0);
-    return { folders: out, unfiled: counts.get(null) ?? 0 };
+    // Игрок не видит папки, в которых (вместе с подпапками) нет доступных ему таблиц.
+    const kids = (id) => (children.get(id) ?? [])
+      .filter((f) => game.user.isGM || total(f.id) > 0)
+      .sort((a, b) => (a.sort - b.sort) || a.name.localeCompare(b.name));
+    const path = (id) => {
+      const out = [];
+      for (let f = byId.get(id); f; f = f.folder) out.unshift(f);
+      return out;
+    };
+    return { byId, total, kids, path };
   }
 
-  #descendantFolderIds(id) {
+  #descendantFolderIds(model, id) {
     const ids = new Set([id]);
-    let grew = true;
-    while (grew) {
-      grew = false;
-      for (const f of game.folders) {
-        if (f.type === "RollTable" && f.folder && ids.has(f.folder.id) && !ids.has(f.id)) {
-          ids.add(f.id);
-          grew = true;
-        }
+    const walk = (fid) => {
+      for (const f of model.kids(fid)) {
+        ids.add(f.id);
+        walk(f.id);
       }
-    }
+    };
+    walk(id);
     return ids;
   }
 
-  #filterByFolder(entries) {
+  /** Таблицы текущего места. Без поиска — как в проводнике: только то, что лежит прямо здесь. */
+  #scopeEntries(world, packs, model) {
     const f = this.#folder;
-    if (f === "all") return entries;
+    const searching = !!this.#query;
+    if (f === "all") return [...world, ...packs];
     if (f === "fav") {
       const fav = new Set(getSetting(SETTINGS.FAVORITES));
-      return entries.filter((e) => fav.has(e.uuid));
+      return [...world, ...packs].filter((e) => fav.has(e.uuid));
     }
     if (f === "recent") {
-      const order = getSetting(SETTINGS.RECENT);
-      const pos = new Map(order.map((uuid, i) => [uuid, i]));
-      return entries.filter((e) => pos.has(e.uuid)).sort((a, b) => pos.get(a.uuid) - pos.get(b.uuid));
+      const pos = new Map(getSetting(SETTINGS.RECENT).map((uuid, i) => [uuid, i]));
+      return [...world, ...packs].filter((e) => pos.has(e.uuid)).sort((a, b) => pos.get(a.uuid) - pos.get(b.uuid));
     }
-    if (f === "unfiled") return entries.filter((e) => !e.pack && !e.folderId);
-    if (f.startsWith("pack:")) return entries.filter((e) => e.pack === f.slice(5));
-    const ids = this.#descendantFolderIds(f);
-    return entries.filter((e) => !e.pack && ids.has(e.folderId));
+    if (f === "root") return searching ? [...world, ...packs] : world.filter((e) => !e.folderId);
+    if (f.startsWith("pack:")) return packs.filter((e) => e.pack === f.slice(5));
+    if (!searching) return world.filter((e) => e.folderId === f);
+    const ids = this.#descendantFolderIds(model, f);
+    return world.filter((e) => ids.has(e.folderId));
+  }
+
+  #isFolder(id) {
+    return !!id && !["all", "fav", "recent", "root"].includes(id) && !id.startsWith("pack:");
   }
 
   /* -------------------------------------------- */
@@ -184,15 +194,76 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
     const all = [...world, ...packs];
     const favorites = new Set(getSetting(SETTINGS.FAVORITES));
     const recent = getSetting(SETTINGS.RECENT);
-    const folderNames = new Map(game.folders.filter((f) => f.type === "RollTable").map((f) => [f.id, f.name]));
+    const expanded = new Set(getSetting(SETTINGS.EXPANDED));
+    const model = this.#folderModel(world);
 
-    const scoped = this.#filterByFolder(all);
-    const hits = this.#query ? search(scoped, this.#query).map((h) => h.entry) : scoped;
+    // Выбранная папка могла исчезнуть (удалили) — возвращаемся в корень.
+    if (this.#isFolder(this.#folder) && !model.byId.has(this.#folder)) this.#folder = "root";
+    const current = this.#isFolder(this.#folder) ? this.#folder : null;
+    const ancestors = new Set(current ? model.path(current).slice(0, -1).map((f) => f.id) : []);
+
+    // Дерево: раскрыты папки из настроек и все предки выбранной.
+    const tree = [];
+    const walk = (parent, depth) => {
+      for (const f of model.kids(parent)) {
+        const hasChildren = model.kids(f.id).length > 0;
+        const isOpen = hasChildren && (expanded.has(f.id) || ancestors.has(f.id));
+        tree.push({
+          id: f.id,
+          name: f.name,
+          indent: 8 + depth * 14,
+          color: f.color?.css ?? f.color ?? null,
+          count: model.total(f.id),
+          hasChildren,
+          expanded: isOpen,
+          active: f.id === current,
+          onPath: ancestors.has(f.id)
+        });
+        if (isOpen) walk(f.id, depth + 1);
+      }
+    };
+    walk(null, 1);
+
+    const searching = !!this.#query;
+    const scoped = this.#scopeEntries(world, packs, model);
+    const hits = searching ? search(scoped, this.#query).map((h) => h.entry) : scoped;
     const shown = hits.slice(0, LIST_LIMIT);
 
-    const tree = this.#folderTree(world);
+    // Подпапки в списке справа — только при просмотре (не при поиске).
+    let subfolders = [];
+    if (!searching && (this.#folder === "root" || current)) {
+      subfolders = model.kids(current).map((f) => ({
+        id: f.id,
+        name: f.name,
+        color: f.color?.css ?? f.color ?? null,
+        count: model.total(f.id),
+        sub: model.kids(f.id).length
+      }));
+    }
+
     const packCounts = new Map();
     for (const e of packs) packCounts.set(e.pack, (packCounts.get(e.pack) ?? 0) + 1);
+    const packTitle = (id) => game.packs.get(id)?.title ?? id;
+
+    // Хлебные крошки и «Наверх»
+    const specialLabel = { all: t("Library.All"), fav: t("Library.Favorites"), recent: t("Library.Recent") };
+    let crumbs;
+    let up = null;
+    if (current) {
+      const path = model.path(current);
+      crumbs = [{ id: "root", label: t("Library.World") }, ...path.map((f) => ({ id: f.id, label: f.name }))];
+      up = path.length > 1 ? path.at(-2).id : "root";
+    } else if (this.#folder.startsWith("pack:")) {
+      crumbs = [{ id: null, label: t("Library.Compendiums") }, { id: this.#folder, label: packTitle(this.#folder.slice(5)) }];
+    } else if (this.#folder === "root") {
+      crumbs = [{ id: "root", label: t("Library.World") }];
+    } else {
+      crumbs = [{ id: this.#folder, label: specialLabel[this.#folder] }];
+    }
+    crumbs.at(-1).current = true;
+
+    const showWhere = searching || ["all", "fav", "recent"].includes(this.#folder);
+    const folderLabel = (id) => model.path(id).map((f) => f.name).join(" / ");
 
     return {
       isGM: game.user.isGM,
@@ -203,14 +274,15 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
         { id: "fav", label: t("Library.Favorites"), icon: "fa-solid fa-star", count: all.filter((e) => favorites.has(e.uuid)).length },
         { id: "recent", label: t("Library.Recent"), icon: "fa-solid fa-clock-rotate-left", count: all.filter((e) => recent.includes(e.uuid)).length }
       ].map((s) => ({ ...s, active: this.#folder === s.id })),
-      folders: tree.folders,
-      unfiled: { count: tree.unfiled, active: this.#folder === "unfiled" },
-      packs: [...packCounts].map(([id, count]) => ({
-        id: `pack:${id}`,
-        label: game.packs.get(id)?.title ?? id,
-        count,
-        active: this.#folder === `pack:${id}`
-      })),
+      worldRoot: { active: this.#folder === "root", count: world.length },
+      folders: tree,
+      packs: [...packCounts].map(([id, count]) => ({ id: `pack:${id}`, label: packTitle(id), count, active: this.#folder === `pack:${id}` })),
+      crumbs,
+      up,
+      searching,
+      scopeLabel: crumbs.at(-1).label,
+      canSearchAll: searching && this.#folder !== "all" && this.#folder !== "root",
+      subfolders,
       rows: shown.map((e) => ({
         uuid: e.uuid,
         name: e.name,
@@ -219,11 +291,11 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
         count: e.count,
         rollCount: e.rollCount,
         fav: favorites.has(e.uuid),
-        where: e.pack ? e.packLabel : (folderNames.get(e.folderId) ?? "")
+        where: showWhere ? (e.pack ? e.packLabel : (e.folderId ? folderLabel(e.folderId) : t("Library.World"))) : ""
       })),
       total: hits.length,
       truncated: hits.length > shown.length,
-      empty: !hits.length,
+      empty: !hits.length && !subfolders.length,
       hasAny: all.length > 0
     };
   }
@@ -243,6 +315,13 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
           event.preventDefault();
           const first = root.querySelector(".tf-row[data-uuid]");
           if (first) rollTable(first.dataset.uuid);
+        } else if (event.key === "Backspace" && !input.value) {
+          // Как в проводнике: Backspace в пустом поиске — на уровень вверх.
+          const up = root.querySelector(".tf-crumbs [data-action=goUp]");
+          if (up) {
+            event.preventDefault();
+            this.#navigate(up.dataset.folder);
+          }
         } else if (event.key === "Escape" && input.value) {
           event.stopPropagation();
           input.value = "";
@@ -256,6 +335,14 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
     if (modeSelect && !modeSelect.dataset.bound) {
       modeSelect.dataset.bound = "1";
       modeSelect.addEventListener("change", () => setSetting(SETTINGS.DEFAULT_MODE, modeSelect.value));
+    }
+    for (const row of root.querySelectorAll(".tf-row--folder")) {
+      row.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          this.#navigate(row.dataset.folder);
+        }
+      });
     }
     for (const row of root.querySelectorAll(".tf-row[data-uuid]")) {
       row.addEventListener("mouseenter", () => this.#schedulePreview(row));
@@ -307,8 +394,49 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
   /*  Действия                                     */
   /* -------------------------------------------- */
 
+  /** Перейти в папку (дерево, папка в списке, хлебные крошки). Поиск сбрасывается, как в проводнике. */
+  #navigate(folder) {
+    if (!folder) return;
+    this.#folder = folder;
+    this.#query = "";
+    const input = this.element.querySelector("input[name=tf-search]");
+    if (input) input.value = "";
+    this.#hidePreview();
+    this.render({ parts: ["tree", "list"] });
+  }
+
+  #pathIds(id) {
+    const out = [];
+    for (let f = game.folders.get(id); f; f = f.folder) out.push(f.id);
+    return out;
+  }
+
   static #onSelectFolder(event, target) {
-    this.#folder = target.dataset.folder;
+    this.#navigate(target.dataset.folder);
+  }
+
+  static async #onToggleExpand(event, target) {
+    event.stopPropagation();
+    const id = target.dataset.folder;
+    const expanded = new Set(getSetting(SETTINGS.EXPANDED));
+    const wasOpen = target.closest("[aria-expanded]")?.getAttribute("aria-expanded") === "true";
+    if (wasOpen) expanded.delete(id);
+    else expanded.add(id);
+    await setSetting(SETTINGS.EXPANDED, [...expanded]);
+    // Свернули ветку с выбранной папкой внутри — выбор поднимается на свёрнутую папку.
+    if (wasOpen && this.#isFolder(this.#folder) && this.#folder !== id && this.#pathIds(this.#folder).includes(id)) {
+      return this.#navigate(id);
+    }
+    this.render({ parts: ["tree"] });
+  }
+
+  static #onGoUp(event, target) {
+    this.#navigate(target.dataset.folder);
+  }
+
+  /** Ничего не нашлось в папке — искать то же самое во всех таблицах. */
+  static #onSearchAll() {
+    this.#folder = "all";
     this.render({ parts: ["tree", "list"] });
   }
 
