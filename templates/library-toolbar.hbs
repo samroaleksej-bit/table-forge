@@ -1,0 +1,13 @@
+<div class="tf-toolbar">
+  <label class="tf-search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="search" name="tf-search" value="{{query}}" placeholder="{{localize "TABLEFORGE.Library.SearchPlaceholder"}}" autocomplete="off" spellcheck="false">
+  </label>
+  <select name="tf-mode" data-tooltip="{{localize "TABLEFORGE.Library.ModeHint"}}">
+    <option value="gm" {{#if (eq mode "gm")}}selected{{/if}}>{{localize "TABLEFORGE.Mode.gm"}}</option>
+    <option value="public" {{#if (eq mode "public")}}selected{{/if}}>{{localize "TABLEFORGE.Mode.public"}}</option>
+  </select>
+  {{#if isGM}}
+  <button type="button" data-action="openImport"><i class="fa-solid fa-file-import"></i> {{localize "TABLEFORGE.Import.Button"}}</button>
+  {{/if}}
+</div>

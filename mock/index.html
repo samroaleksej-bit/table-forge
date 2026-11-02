@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Table Forge — мок Foundry</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../styles/table-forge.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"></script>
+  <style>
+    /* Грубое приближение оформления Foundry v13: только чтобы окна модуля выглядели правдоподобно */
+    :root { --font-mono: Consolas, monospace; }
+    body.theme-dark { --color-text-primary: #e8e6e3; --color-text-secondary: #a5a19a; --color-bg: #1c1b1a; --mock-win: #24221f; --mock-head: #151413; --mock-btn: #2f2c29; --mock-line: #3d3934; background: #3b3f45 radial-gradient(#4a4f56, #2b2e33); }
+    body.theme-light { --color-text-primary: #1b1b1b; --color-text-secondary: #5d5b55; --color-bg: #efebe3; --mock-win: #f3efe7; --mock-head: #d8d1c3; --mock-btn: #e3ddd1; --mock-line: #c9c1b2; background: #b9bec5; }
+    body { margin: 0; height: 100vh; display: grid; grid-template-columns: 1fr 320px; font: 14px/1.4 "Segoe UI", Signika, sans-serif; color: var(--color-text-primary); overflow: hidden; }
+    button, select, input { font: inherit; color: inherit; }
+    button { background: var(--mock-btn); border: 1px solid var(--mock-line); border-radius: 4px; padding: 0 8px; min-height: 28px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
+    button:hover { border-color: #e7774b; }
+    select, input[type=search] { background: var(--mock-btn); border: 1px solid var(--mock-line); border-radius: 4px; padding: 0 6px; }
+    a { color: inherit; text-decoration: none; }
+    table { width: 100%; border-collapse: collapse; }
+    #windows { position: relative; }
+    .application { position: absolute; display: flex; flex-direction: column; background: var(--mock-win); border: 1px solid #000; border-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,.5); overflow: hidden; }
+    .window-header { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: var(--mock-head); }
+    .window-title { flex: 1; margin: 0; font-size: 15px; }
+    .header-control { border: none; background: none; }
+    .window-content { flex: 1; min-height: 0; overflow: auto; padding: 8px; }
+    #sidebar { display: flex; flex-direction: column; background: var(--mock-win); border-left: 1px solid #000; min-height: 0; }
+    #tables-directory { padding: 8px; border-bottom: 1px solid var(--mock-line); }
+    #tables-directory .header-actions { display: flex; gap: 4px; }
+    #tables-directory .header-actions button { flex: 1; }
+    #chat-log { flex: 1; list-style: none; margin: 0; padding: 6px; overflow-y: auto; }
+    .chat-message { background: var(--color-bg); border: 1px solid var(--mock-line); border-radius: 5px; padding: 6px 8px; margin-bottom: 6px; }
+    .chat-message.whisper { border-color: #9b6bd6; }
+    .message-header { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+    .whisper-to { color: #b89be0; }
+    .content-link, .inline-roll { background: rgba(127,127,127,.18); border: 1px solid var(--mock-line); border-radius: 3px; padding: 0 3px; white-space: nowrap; }
+    #toasts { position: fixed; top: 8px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 4px; z-index: 9999; }
+    .mock-toast { padding: 6px 12px; border-radius: 4px; background: #2f5c8a; color: #fff; }
+    .mock-toast.warn { background: #8a6a2f; } .mock-toast.error { background: #8a2f2f; }
+    #whoami { position: fixed; left: 8px; bottom: 6px; font-size: 12px; opacity: .7; }
+  </style>
+</head>
+<body class="theme-dark">
+  <main id="windows"></main>
+  <aside id="sidebar">
+    <section id="tables-directory"><header class="directory-header"><div class="header-actions"><button type="button"><i class="fa-solid fa-table-list"></i> Создать таблицу</button><button type="button"><i class="fa-solid fa-folder-plus"></i> Папка</button></div></header></section>
+    <ol id="chat-log"></ol>
+  </aside>
+  <div id="toasts"></div>
+  <div id="whoami"></div>
+  <script type="module" src="./foundry-mock.mjs"></script>
+</body>
+</html>

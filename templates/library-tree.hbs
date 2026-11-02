@@ -1,0 +1,30 @@
+<nav class="tf-tree">
+  <ul class="tf-tree__group">
+    {{#each specials}}
+    <li><a class="tf-node {{#if active}}active{{/if}}" data-action="selectFolder" data-folder="{{id}}">
+      <i class="{{icon}}"></i><span class="tf-node__name">{{label}}</span><span class="tf-count">{{count}}</span>
+    </a></li>
+    {{/each}}
+  </ul>
+  <h4>{{localize "TABLEFORGE.Library.World"}}</h4>
+  <ul class="tf-tree__group">
+    {{#each folders}}
+    <li><a class="tf-node {{#if active}}active{{/if}}" data-action="selectFolder" data-folder="{{id}}" style="padding-left: calc(8px + {{indent}}px)">
+      <i class="fa-solid fa-folder" {{#if color}}style="color: {{color}}"{{/if}}></i><span class="tf-node__name">{{name}}</span><span class="tf-count">{{count}}</span>
+    </a></li>
+    {{/each}}
+    <li><a class="tf-node {{#if unfiled.active}}active{{/if}}" data-action="selectFolder" data-folder="unfiled">
+      <i class="fa-regular fa-folder-open"></i><span class="tf-node__name">{{localize "TABLEFORGE.Library.Unfiled"}}</span><span class="tf-count">{{unfiled.count}}</span>
+    </a></li>
+  </ul>
+  {{#if packs.length}}
+  <h4>{{localize "TABLEFORGE.Library.Compendiums"}}</h4>
+  <ul class="tf-tree__group">
+    {{#each packs}}
+    <li><a class="tf-node {{#if active}}active{{/if}}" data-action="selectFolder" data-folder="{{id}}">
+      <i class="fa-solid fa-book-atlas"></i><span class="tf-node__name">{{label}}</span><span class="tf-count">{{count}}</span>
+    </a></li>
+    {{/each}}
+  </ul>
+  {{/if}}
+</nav>

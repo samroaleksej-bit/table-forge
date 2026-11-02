@@ -1,0 +1,84 @@
+{
+  "TABLEFORGE": {
+    "Library": {
+      "Title": "Table Forge",
+      "SearchPlaceholder": "Search names and results…",
+      "ModeHint": "Who sees the roll card",
+      "All": "All tables",
+      "Favorites": "Favorites",
+      "Recent": "Recent",
+      "World": "World",
+      "Unfiled": "No folder",
+      "Compendiums": "Compendiums",
+      "Roll": "Roll",
+      "Favorite": "Favorite",
+      "Open": "Open table",
+      "ResultsCount": "Results",
+      "RollCount": "Times rolled",
+      "NothingFound": "Nothing found.",
+      "ClearSearch": "Clear search",
+      "EmptyFolder": "Nothing here yet.",
+      "NoTables": "This world has no tables yet.",
+      "Truncated": "Showing the first 300. Refine your search.",
+      "Found": "Found",
+      "EnterHint": "rolls the first one",
+      "PreviewMore": "…and {count} more"
+    },
+    "Mode": {
+      "gm": "GM only",
+      "public": "Everyone"
+    },
+    "Card": {
+      "Reroll": "Reroll",
+      "Again": "Roll again",
+      "Reveal": "Show players"
+    },
+    "Roll": {
+      "NotFound": "Table not found.",
+      "Empty": "Table \"{name}\" has no results.",
+      "Exhausted": "Table \"{name}\" has no results left. Reset drawn results in the table sheet."
+    },
+    "Import": {
+      "Title": "Import tables",
+      "Button": "Import",
+      "Drop": "Drop fvtt-RollTable-*.json files here or click to choose",
+      "DropHint": "Many files at once are fine. Duplicates are detected automatically.",
+      "Table": "Table",
+      "Formula": "Formula",
+      "Note": "Note",
+      "KeepFolders": "Keep folders",
+      "Cancel": "Cancel",
+      "Run": "Import",
+      "More": "Import more",
+      "DupOf": "duplicate of {name}",
+      "FormulaInferred": "formula inferred: {formula}",
+      "GMOnly": "Only the GM can import tables.",
+      "Done": "Import finished: {created} created, {skipped} duplicates skipped, {errors} errors.",
+      "Failed": "Import aborted: {error}",
+      "DoneCreated": "Tables created",
+      "DoneFolders": "Folders created",
+      "DoneSkipped": "Duplicates skipped",
+      "DoneErrors": "Files with errors",
+      "Status": {
+        "new": "New",
+        "dup-batch": "Duplicates in selection",
+        "dup-world": "Already in world",
+        "error": "Errors"
+      },
+      "Error": {
+        "invalid-json": "not valid JSON",
+        "not-a-table": "not a table export",
+        "bad-results": "results are damaged"
+      }
+    },
+    "Settings": {
+      "DefaultMode": {
+        "Name": "Who sees rolls",
+        "Hint": "Default mode for Table Forge rolls. The GM can reveal a hidden card with the \"Show players\" button."
+      }
+    },
+    "Keybindings": {
+      "OpenLibrary": "Open Table Forge"
+    }
+  }
+}

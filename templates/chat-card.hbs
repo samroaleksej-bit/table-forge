@@ -1,0 +1,22 @@
+<div class="tf-card">
+  <header class="tf-card__head">
+    <img src="{{img}}" alt="">
+    <div class="tf-card__title">
+      <h3>{{name}}</h3>
+      <span class="tf-card__formula">{{formula}}</span>
+    </div>
+    <span class="tf-card__total">{{total}}</span>
+  </header>
+  {{#each results}}
+  <section class="tf-card__result">
+    {{#if ../multiple}}<span class="tf-card__range">{{range}}</span>{{/if}}
+    {{#if img}}<img class="tf-card__img" src="{{img}}" alt="">{{/if}}
+    <div class="tf-card__text">{{{html}}}</div>
+  </section>
+  {{/each}}
+  <footer class="tf-card__actions">
+    <button type="button" data-tf-action="reroll"><i class="fa-solid fa-rotate"></i> {{localize "TABLEFORGE.Card.Reroll"}}</button>
+    <button type="button" data-tf-action="again"><i class="fa-solid fa-dice-d20"></i> {{localize "TABLEFORGE.Card.Again"}}</button>
+    <button type="button" data-tf-action="reveal"><i class="fa-solid fa-eye"></i> {{localize "TABLEFORGE.Card.Reveal"}}</button>
+  </footer>
+</div>

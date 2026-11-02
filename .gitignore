@@ -1,0 +1,7 @@
+# Тестовые экспорты из мира (сторонний контент ag-fifthpendium) — не коммитить
+fvtt-RollTable-*.json
+*.RollTable*.json
+node_modules/
+dist/
+*.zip
+mock/shots/

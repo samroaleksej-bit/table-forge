@@ -1,0 +1,49 @@
+<div class="tf-import__body">
+  <input type="file" accept=".json,application/json" multiple hidden>
+  {{#if done}}
+    <div class="tf-import__done">
+      <i class="fa-solid fa-circle-check"></i>
+      <p>{{localize "TABLEFORGE.Import.DoneCreated"}}: <strong>{{done.created}}</strong></p>
+      <p>{{localize "TABLEFORGE.Import.DoneFolders"}}: <strong>{{done.folders}}</strong></p>
+      <p>{{localize "TABLEFORGE.Import.DoneSkipped"}}: <strong>{{done.skipped}}</strong></p>
+      {{#if done.errors}}<p class="tf-bad">{{localize "TABLEFORGE.Import.DoneErrors"}}: <strong>{{done.errors}}</strong></p>{{/if}}
+      <button type="button" data-action="reset">{{localize "TABLEFORGE.Import.More"}}</button>
+    </div>
+  {{else if plan}}
+    <div class="tf-import__summary">
+      <span class="tf-chip tf-new"><i class="fa-solid fa-plus"></i> {{localize "TABLEFORGE.Import.Status.new"}}: {{summary.new}}</span>
+      <span class="tf-chip tf-dup"><i class="fa-solid fa-clone"></i> {{localize "TABLEFORGE.Import.Status.dup-batch"}}: {{summary.dupBatch}}</span>
+      <span class="tf-chip tf-dup"><i class="fa-solid fa-equals"></i> {{localize "TABLEFORGE.Import.Status.dup-world"}}: {{summary.dupWorld}}</span>
+      {{#if summary.errors}}<span class="tf-chip tf-bad"><i class="fa-solid fa-triangle-exclamation"></i> {{localize "TABLEFORGE.Import.Status.error"}}: {{summary.errors}}</span>{{/if}}
+    </div>
+    <div class="tf-import__report">
+      <table>
+        <thead><tr><th></th><th>{{localize "TABLEFORGE.Import.Table"}}</th><th>{{localize "TABLEFORGE.Import.Formula"}}</th><th>#</th><th>{{localize "TABLEFORGE.Import.Note"}}</th></tr></thead>
+        <tbody>
+          {{#each rows}}
+          <tr class="tf-st-{{status}}">
+            <td data-tooltip="{{label}}"><i class="{{icon}}"></i></td>
+            <td class="tf-name" data-tooltip="{{file}}">{{name}}</td>
+            <td>{{formula}}</td>
+            <td>{{results}}</td>
+            <td class="tf-note">{{note}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <footer class="tf-import__actions">
+      <label class="tf-check"><input type="checkbox" name="keepFolders" {{#if keepFolders}}checked{{/if}}> {{localize "TABLEFORGE.Import.KeepFolders"}} ({{folderCount}})</label>
+      <button type="button" data-action="reset">{{localize "TABLEFORGE.Import.Cancel"}}</button>
+      <button type="button" class="tf-primary" data-action="runImport" {{#if busy}}disabled{{/if}} {{#unless summary.new}}disabled{{/unless}}>
+        <i class="fa-solid {{#if busy}}fa-spinner fa-spin{{else}}fa-file-import{{/if}}"></i> {{localize "TABLEFORGE.Import.Run"}} ({{summary.new}})
+      </button>
+    </footer>
+  {{else}}
+    <div class="tf-dropzone" data-action="pickFiles">
+      <i class="fa-solid fa-file-import"></i>
+      <p>{{localize "TABLEFORGE.Import.Drop"}}</p>
+      <p class="tf-hint">{{localize "TABLEFORGE.Import.DropHint"}}</p>
+    </div>
+  {{/if}}
+</div>

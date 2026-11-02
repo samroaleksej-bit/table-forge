@@ -1,0 +1,66 @@
+name: Release
+
+# Релиз собирается сам, когда на main меняется version в module.json.
+on:
+  push:
+    branches: [main]
+    paths: [module.json]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Версия из module.json
+        id: v
+        run: |
+          VERSION=$(jq -r .version module.json)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "Релиз v$VERSION уже есть — пропускаю."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - uses: actions/setup-node@v4
+        if: steps.v.outputs.exists == 'false'
+        with:
+          node-version: 22
+
+      - name: Тесты
+        if: steps.v.outputs.exists == 'false'
+        run: node --test "tests/*.test.mjs"
+
+      - name: Сборка module.zip
+        if: steps.v.outputs.exists == 'false'
+        run: |
+          V=${{ steps.v.outputs.version }}
+          REPO=${{ github.repository }}
+          jq --arg d "https://github.com/$REPO/releases/download/v$V/module.zip" \
+             --arg m "https://github.com/$REPO/releases/latest/download/module.json" \
+             '.download = $d | .manifest = $m' module.json > module.release.json
+          mkdir -p dist/table-forge
+          cp -r scripts templates styles lang README.md CHANGELOG.md LICENSE dist/table-forge/
+          cp module.release.json dist/table-forge/module.json
+          (cd dist/table-forge && zip -r ../../module.zip .)
+          cp module.release.json dist/module.json
+          # Заметки к релизу: раздел этой версии из CHANGELOG.md
+          awk -v v="$V" '$0 ~ "^## \[?"v"\]?" {on=1; next} /^## / && on {exit} on' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "Table Forge v$V" > notes.md
+
+      - name: Публикация релиза
+        if: steps.v.outputs.exists == 'false'
+        run: |
+          V=${{ steps.v.outputs.version }}
+          gh release create "v$V" module.zip dist/module.json \
+            --title "Table Forge v$V" --notes-file notes.md --target "${{ github.sha }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
