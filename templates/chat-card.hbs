@@ -1,12 +1,18 @@
 <div class="tf-card">
   <header class="tf-card__head">
-    <img src="{{img}}" alt="">
     <div class="tf-card__title">
       <h3>{{name}}</h3>
       <span class="tf-card__formula">{{formula}}</span>
     </div>
-    <span class="tf-card__total">{{total}}</span>
+    <span class="tf-coin" aria-label="{{formula}}: {{total}}">{{total}}</span>
   </header>
+  {{#if ruler}}
+  <div class="tf-ruler" data-pos="{{ruler.pos}}" aria-hidden="true">
+    <span class="tf-ruler__min">{{ruler.min}}</span>
+    <span class="tf-ruler__track"><span class="tf-ruler__fill"></span></span>
+    <span class="tf-ruler__max">{{ruler.max}}</span>
+  </div>
+  {{/if}}
   {{#each results}}
   <section class="tf-card__result">
     {{#if ../multiple}}<span class="tf-card__range">{{range}}</span>{{/if}}

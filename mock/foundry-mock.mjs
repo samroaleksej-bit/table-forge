@@ -277,7 +277,7 @@ class ChatMessage extends MockDocument {
   static get implementation() { return this; }
   static getSpeaker({ alias } = {}) { return { alias }; }
   static async create(data) {
-    const m = new ChatMessage({ ...data, id: utils.randomID(), author: game.user.id });
+    const m = new ChatMessage({ ...data, id: utils.randomID(), author: game.user.id, timestamp: Date.now() });
     m.rolls = (data.rolls ?? []).map((r) => (r.toJSON ? r.toJSON() : r));
     game.messages.set(m.id, m);
     m.render();

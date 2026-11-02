@@ -21,7 +21,7 @@
       "NoTables": "This world has no tables yet.",
       "Truncated": "Showing the first 300. Refine your search.",
       "Found": "Found",
-      "EnterHint": "rolls the first one",
+      "EnterHint": "rolls the top one",
       "PreviewMore": "…and {count} more"
     },
     "Mode": {

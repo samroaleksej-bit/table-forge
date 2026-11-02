@@ -1,49 +1,71 @@
-/* Table Forge — все классы с префиксом tf- / .table-forge */
+/* Table Forge — все классы с префиксом tf- / .table-forge
+ *
+ * Направление: «латунь на железе». Один акцент — латунь, всё остальное спокойные
+ * поверхности Foundry. Единственная смелая деталь — латунная монета с выпавшим числом
+ * и шкала броска в карточке чата.
+ *
+ * Движение (по правилам skill «animate»): поиск, список и дерево не анимируются — ими
+ * пользуются десятки раз за сессию. Анимируются только новая карточка (обратная связь),
+ * предпросмотр (не телепортируется) и итог импорта (редкий момент). Только transform/opacity.
+ */
 
 .table-forge,
 .tf-card {
-  --tf-accent: #c2552e;
-  --tf-accent-soft: rgba(194, 85, 46, 0.14);
-  --tf-text: var(--color-text-primary, #1b1b1b);
-  --tf-muted: var(--color-text-secondary, #5d5b55);
-  --tf-line: rgba(0, 0, 0, 0.12);
-  --tf-row-hover: rgba(0, 0, 0, 0.05);
-  --tf-panel: rgba(0, 0, 0, 0.035);
-  --tf-pop-bg: #f7f4ee;
-  --tf-ok: #3c7d3a;
-  --tf-warn: #a4661b;
-  --tf-bad: #b23a3a;
+  --tf-brass: #b58a2a;
+  --tf-brass-hi: #e3c06a;
+  --tf-brass-lo: #6d4f12;
+  --tf-accent: #8c6414;            /* текст и линии акцента: контраст на светлом фоне */
+  --tf-accent-soft: rgba(181, 138, 42, 0.16);
+  --tf-on-accent: #fffaf0;
+  --tf-text: var(--color-text-primary, #23211c);
+  --tf-muted: var(--color-text-secondary, #6a655a);
+  --tf-line: rgba(40, 30, 10, 0.14);
+  --tf-hover: rgba(40, 30, 10, 0.05);
+  --tf-panel: rgba(40, 30, 10, 0.04);
+  --tf-pop: #fbf7ee;
+  --tf-ok: #3d7a37;
+  --tf-warn: #96610f;
+  --tf-bad: #a8332f;
+  --tf-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --tf-radius: 5px;
 }
 
 .theme-dark .table-forge,
 .table-forge.theme-dark,
-.theme-dark .tf-card {
-  --tf-accent: #e7774b;
-  --tf-accent-soft: rgba(231, 119, 75, 0.18);
-  --tf-text: var(--color-text-primary, #e8e6e3);
-  --tf-muted: var(--color-text-secondary, #a5a19a);
-  --tf-line: rgba(255, 255, 255, 0.1);
-  --tf-row-hover: rgba(255, 255, 255, 0.05);
-  --tf-panel: rgba(255, 255, 255, 0.03);
-  --tf-pop-bg: #23211f;
-  --tf-ok: #79c376;
-  --tf-warn: #e0a256;
-  --tf-bad: #e07272;
+.theme-dark .tf-card,
+.tf-card.theme-dark {
+  --tf-accent: #dcb45c;
+  --tf-accent-soft: rgba(220, 180, 92, 0.14);
+  --tf-on-accent: #1e1607;
+  --tf-text: var(--color-text-primary, #e9e4da);
+  --tf-muted: var(--color-text-secondary, #a39d90);
+  --tf-line: rgba(255, 240, 210, 0.1);
+  --tf-hover: rgba(255, 240, 210, 0.05);
+  --tf-panel: rgba(255, 240, 210, 0.03);
+  --tf-pop: #24211c;
+  --tf-ok: #86c47e;
+  --tf-warn: #e2ac57;
+  --tf-bad: #e6807a;
 }
 
 .table-forge button { cursor: pointer; }
+.table-forge :focus-visible,
+.tf-card :focus-visible { outline: 2px solid var(--tf-accent); outline-offset: 1px; }
 .table-forge kbd {
-  font-size: 0.85em;
+  font: inherit;
+  font-size: 11px;
   padding: 0 4px;
   border: 1px solid var(--tf-line);
+  border-bottom-width: 2px;
   border-radius: 3px;
+  color: var(--tf-muted);
 }
 
-/* ---------- Библиотека ---------- */
+/* ======================= Библиотека ======================= */
 
 .tf-library .window-content {
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-columns: 210px minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
   padding: 0;
   gap: 0;
@@ -59,39 +81,46 @@
   padding: 8px;
   border-bottom: 1px solid var(--tf-line);
 }
-.tf-library .tf-search {
+.tf-search {
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 0 8px;
+  gap: 8px;
+  height: 34px;
+  padding: 0 10px;
   border: 1px solid var(--tf-line);
-  border-radius: 4px;
+  border-radius: var(--tf-radius);
   background: var(--tf-panel);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
-.tf-library .tf-search:focus-within { border-color: var(--tf-accent); box-shadow: 0 0 0 1px var(--tf-accent-soft); }
-.tf-library .tf-search i { color: var(--tf-muted); }
-.tf-library .tf-search input {
+.tf-search:focus-within { border-color: var(--tf-accent); box-shadow: 0 0 0 3px var(--tf-accent-soft); }
+.tf-search > i { color: var(--tf-muted); }
+.tf-search input {
   flex: 1;
+  min-width: 0;
+  height: 100%;
   border: none;
   background: none;
-  height: 30px;
   font-size: 14px;
+  color: var(--tf-text);
   box-shadow: none;
   outline: none;
 }
-.tf-library .tf-toolbar select { width: auto; height: 32px; }
-.tf-library .tf-toolbar > button { flex: 0 0 auto; width: auto; height: 32px; white-space: nowrap; }
+.tf-search input:focus { box-shadow: none; outline: none; }
+.tf-search__hint { font-size: 11px; color: var(--tf-muted); white-space: nowrap; opacity: 0; transition: opacity 150ms ease; }
+.tf-search:focus-within .tf-search__hint { opacity: 1; }
+.tf-library .tf-toolbar select { width: auto; height: 34px; }
+.tf-library .tf-toolbar > button { flex: 0 0 auto; width: auto; height: 34px; white-space: nowrap; }
 
 .tf-library [data-application-part="tree"] { overflow-y: auto; border-right: 1px solid var(--tf-line); background: var(--tf-panel); }
 .tf-library [data-application-part="list"] { overflow-y: auto; }
 
-.tf-tree { padding: 6px 0; font-size: 13px; }
+/* ---- Дерево ---- */
+.tf-tree { padding: 6px 0 12px; font-size: 13px; }
 .tf-tree h4 {
-  margin: 10px 10px 4px;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  margin: 12px 12px 4px;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--tf-muted);
   border: none;
 }
@@ -99,56 +128,66 @@
 .tf-node {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 8px;
+  gap: 7px;
+  padding: 4px 10px 4px 9px;
   color: var(--tf-text);
   border-left: 3px solid transparent;
   cursor: pointer;
 }
-.tf-node:hover { background: var(--tf-row-hover); text-shadow: none; }
-.tf-node.active { background: var(--tf-accent-soft); border-left-color: var(--tf-accent); }
+.tf-node:hover { background: var(--tf-hover); text-shadow: none; }
+.tf-node.active { background: var(--tf-accent-soft); border-left-color: var(--tf-brass); font-weight: 600; }
 .tf-node i { width: 14px; text-align: center; color: var(--tf-muted); }
 .tf-node.active i { color: var(--tf-accent); }
 .tf-node__name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tf-count { font-size: 11px; color: var(--tf-muted); font-variant-numeric: tabular-nums; }
+.tf-node.active .tf-count { color: var(--tf-accent); }
 
-.tf-list { display: flex; flex-direction: column; min-height: 100%; }
+/* ---- Список ---- */
+.tf-list { display: flex; flex-direction: column; height: 100%; }
 .tf-rows { list-style: none; margin: 0; padding: 0; flex: 1; }
 .tf-row {
   display: grid;
-  grid-template-columns: 30px 28px minmax(0, 1fr) 64px 32px 44px 26px 26px;
+  grid-template-columns: 32px 26px minmax(0, 1fr) 52px 30px 40px 26px 26px;
   align-items: center;
-  gap: 6px;
-  padding: 3px 8px;
+  gap: 8px;
+  min-height: 42px;
+  padding: 4px 10px 4px 8px;
   border-bottom: 1px solid var(--tf-line);
   font-size: 13px;
 }
-.tf-row:hover { background: var(--tf-row-hover); }
-.tf-row__img { width: 28px; height: 28px; border: none; object-fit: contain; }
-.tf-row__main { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+.tf-row:hover { background: var(--tf-hover); }
+/* Первая находка поиска — то, что бросит Enter */
+.tf-row--top { background: var(--tf-accent-soft); box-shadow: inset 3px 0 0 var(--tf-brass); }
+.tf-row--top:hover { background: var(--tf-accent-soft); }
+.tf-row__img { width: 26px; height: 26px; border: none; object-fit: contain; opacity: 0.9; }
+.tf-row__main { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
 .tf-row__name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tf-row__where { font-size: 11px; color: var(--tf-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tf-row__formula,
 .tf-row__count,
-.tf-row__rolls { font-size: 12px; color: var(--tf-muted); font-variant-numeric: tabular-nums; text-align: right; }
-.tf-row__formula { font-family: var(--font-mono, monospace); }
+.tf-row__rolls { font-size: 12px; color: var(--tf-muted); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.tf-row__formula { color: var(--tf-text); font-weight: 600; }
+.tf-row__rolls i { font-size: 10px; margin-right: 2px; }
 
+/* Кнопка броска: латунная грань */
 .tf-roll {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   display: grid;
   place-items: center;
-  border: 1px solid var(--tf-accent);
-  border-radius: 4px;
-  color: var(--tf-accent);
-  background: transparent;
+  border: 1px solid var(--tf-brass-lo);
+  border-radius: var(--tf-radius);
+  color: var(--tf-on-accent);
+  background: linear-gradient(180deg, var(--tf-brass-hi), var(--tf-brass) 55%, var(--tf-brass-lo));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
   line-height: 1;
+  transition: transform 120ms var(--tf-ease-out), filter 150ms ease;
 }
-.tf-roll:hover { background: var(--tf-accent); color: #fff; }
-.tf-roll i { margin: 0; }
-.tf-roll.tf-rolling i { animation: tf-spin 0.5s linear infinite; }
-@keyframes tf-spin { to { transform: rotate(360deg); } }
+.tf-roll i { margin: 0; font-size: 15px; color: #2a1d05; }
+.tf-roll:active { transform: scale(0.95); }
+.tf-roll.tf-rolling i { animation: tf-spin 600ms var(--tf-ease-out); }
+@keyframes tf-spin { from { transform: rotate(-180deg); } }
 
 .tf-icon {
   width: 26px;
@@ -161,21 +200,32 @@
 }
 .tf-icon:hover { color: var(--tf-text); box-shadow: none; }
 .tf-icon i { margin: 0; }
-.tf-icon.tf-fav { color: #d4a017; }
+.tf-icon.tf-fav { color: var(--tf-brass); }
 
-.tf-empty { padding: 40px 16px; text-align: center; color: var(--tf-muted); }
+/* Мышь: второстепенные кнопки появляются на строке под курсором. На тач-экранах видны всегда. */
+@media (hover: hover) and (pointer: fine) {
+  .tf-roll:hover { filter: brightness(1.08); }
+  .tf-row .tf-icon:not(.tf-fav) { opacity: 0; transition: opacity 120ms ease; }
+  .tf-row:hover .tf-icon,
+  .tf-row .tf-icon:focus-visible { opacity: 1; }
+}
+
+.tf-empty { padding: 48px 16px; text-align: center; color: var(--tf-muted); }
+.tf-empty p { margin: 0 0 10px; }
 .tf-empty button { width: auto; margin: 0 auto; }
 .tf-more { text-align: center; color: var(--tf-muted); font-size: 12px; }
 .tf-status {
   position: sticky;
   bottom: 0;
+  margin-top: auto;
   padding: 4px 10px;
   font-size: 11px;
   color: var(--tf-muted);
   border-top: 1px solid var(--tf-line);
-  background: var(--color-bg, var(--tf-pop-bg));
+  background: var(--color-bg, var(--tf-pop));
 }
 
+/* ---- Предпросмотр ---- */
 .tf-preview {
   position: absolute;
   right: 12px;
@@ -183,134 +233,245 @@
   max-height: 60%;
   overflow: hidden;
   z-index: 10;
-  padding: 8px 10px;
+  padding: 10px 12px;
   border: 1px solid var(--tf-line);
-  border-left: 3px solid var(--tf-accent);
-  border-radius: 4px;
-  background: var(--tf-pop-bg);
+  border-top: 3px solid var(--tf-brass);
+  border-radius: var(--tf-radius);
+  background: var(--tf-pop);
   color: var(--tf-text);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
   font-size: 12px;
   pointer-events: none;
-  animation: tf-fade 0.12s ease-out;
+  transform-origin: top right;
+  animation: tf-pop-in 160ms var(--tf-ease-out);
 }
-.tf-preview header { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
-.tf-preview header span { color: var(--tf-muted); font-family: var(--font-mono, monospace); }
+.tf-preview header { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 6px; font-size: 13px; }
+.tf-preview header span { color: var(--tf-accent); font-weight: 600; }
 .tf-preview ol { list-style: none; margin: 0; padding: 0; }
-.tf-preview li { display: grid; grid-template-columns: 40px 1fr; gap: 6px; padding: 1px 0; }
-.tf-preview footer { color: var(--tf-muted); margin-top: 4px; }
-.tf-range { color: var(--tf-accent); font-variant-numeric: tabular-nums; text-align: right; }
-@keyframes tf-fade { from { opacity: 0; transform: translateY(-3px); } }
+.tf-preview li { display: grid; grid-template-columns: 42px 1fr; gap: 8px; padding: 2px 0; border-top: 1px solid var(--tf-line); }
+.tf-preview li:first-child { border-top: none; }
+.tf-preview footer { color: var(--tf-muted); margin-top: 6px; }
+.tf-range { color: var(--tf-accent); font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+@keyframes tf-pop-in { from { opacity: 0; transform: scale(0.97) translateY(-4px); } }
 
-/* ---------- Сайдбар ---------- */
+/* ======================= Сайдбар ======================= */
 
 .tf-sidebar-buttons { display: flex; gap: 4px; margin-top: 4px; }
 .tf-sidebar-buttons button { flex: 1; }
+.tf-sidebar-buttons [data-tf="library"] i { color: var(--tf-brass, #b58a2a); }
 
-/* ---------- Импорт ---------- */
+/* ======================= Импорт ======================= */
 
-.tf-import .window-content { padding: 8px; }
-.tf-import__body { display: flex; flex-direction: column; height: 100%; gap: 8px; }
+.tf-import .window-content { padding: 10px; }
+.tf-import__body { display: flex; flex-direction: column; height: 100%; gap: 10px; }
 .tf-dropzone {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
+  padding: 24px;
   border: 2px dashed var(--tf-line);
-  border-radius: 6px;
+  border-radius: 8px;
   color: var(--tf-muted);
   text-align: center;
   cursor: pointer;
-  padding: 24px;
+  transition: border-color 150ms ease, background-color 150ms ease;
 }
-.tf-dropzone i { font-size: 36px; color: var(--tf-accent); }
+.tf-dropzone p { margin: 0; }
+.tf-dropzone > p:first-of-type { color: var(--tf-text); font-size: 15px; font-weight: 600; max-width: 34ch; }
+.tf-dropzone > i { font-size: 40px; color: var(--tf-brass); transition: transform 200ms var(--tf-ease-out); }
 .tf-dropzone:hover,
-.tf-dropzone.tf-over { border-color: var(--tf-accent); background: var(--tf-accent-soft); }
+.tf-dropzone.tf-over { border-color: var(--tf-brass); background: var(--tf-accent-soft); }
+.tf-dropzone.tf-over > i { transform: translateY(-4px); }
 .tf-hint { font-size: 12px; }
 
 .tf-import__summary { display: flex; flex-wrap: wrap; gap: 6px; }
-.tf-chip { padding: 2px 8px; border-radius: 10px; font-size: 12px; background: var(--tf-panel); border: 1px solid var(--tf-line); }
+.tf-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  background: var(--tf-panel);
+  border: 1px solid var(--tf-line);
+}
 .tf-chip.tf-new { color: var(--tf-ok); }
 .tf-chip.tf-dup { color: var(--tf-warn); }
 .tf-chip.tf-bad, .tf-bad { color: var(--tf-bad); }
 
-.tf-import__report { flex: 1; overflow-y: auto; border: 1px solid var(--tf-line); border-radius: 4px; }
-.tf-import__report table { margin: 0; font-size: 12px; border: none; }
-.tf-import__report thead th { position: sticky; top: 0; background: var(--tf-pop-bg); text-align: left; }
-.tf-import__report td { padding: 2px 6px; vertical-align: top; }
+.tf-import__report { flex: 1; overflow-y: auto; border: 1px solid var(--tf-line); border-radius: var(--tf-radius); }
+.tf-import__report table { margin: 0; font-size: 12px; border: none; background: none; }
+.tf-import__report thead th {
+  position: sticky;
+  top: 0;
+  padding: 5px 6px;
+  background: var(--tf-pop);
+  color: var(--tf-muted);
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 1px solid var(--tf-line);
+}
+.tf-import__report td { padding: 3px 6px; vertical-align: top; border-bottom: 1px solid var(--tf-line); }
+.tf-import__report tr:nth-child(even) td { background: var(--tf-panel); }
 .tf-import__report td:first-child { width: 20px; text-align: center; }
 .tf-import__report .tf-name { font-weight: 600; }
-.tf-import__report .tf-note { color: var(--tf-muted); }
+.tf-import__report .tf-note { color: var(--tf-muted); overflow-wrap: anywhere; }
 .tf-st-new i { color: var(--tf-ok); }
 .tf-st-dup-batch i, .tf-st-dup-world i { color: var(--tf-warn); }
-.tf-st-dup-batch, .tf-st-dup-world { opacity: 0.75; }
+.tf-st-dup-batch .tf-name, .tf-st-dup-world .tf-name { font-weight: 400; color: var(--tf-muted); }
 .tf-st-error i, .tf-st-error .tf-note { color: var(--tf-bad); }
 
 .tf-import__actions { display: flex; gap: 6px; align-items: center; }
 .tf-import__actions .tf-check { flex: 1; display: flex; align-items: center; gap: 4px; }
 .tf-import__actions button { width: auto; }
-.tf-primary { background: var(--tf-accent); color: #fff; border-color: var(--tf-accent); }
-.tf-primary:disabled { opacity: 0.5; }
+.tf-primary {
+  border: 1px solid var(--tf-brass-lo);
+  background: linear-gradient(180deg, var(--tf-brass-hi), var(--tf-brass) 55%, var(--tf-brass-lo));
+  color: #2a1d05;
+  font-weight: 600;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.tf-primary:disabled { filter: grayscale(0.7); opacity: 0.55; }
 
 .tf-import__done { margin: auto; text-align: center; }
-.tf-import__done > i { font-size: 40px; color: var(--tf-ok); }
-.tf-import__done p { margin: 4px 0; }
-.tf-import__done button { width: auto; margin-top: 8px; }
+.tf-import__done > i { font-size: 44px; color: var(--tf-ok); margin-bottom: 8px; animation: tf-settle 300ms var(--tf-ease-out); }
+.tf-import__done p { margin: 4px 0; font-variant-numeric: tabular-nums; }
+.tf-import__done button { width: auto; margin-top: 12px; }
 
-/* ---------- Карточка в чате ---------- */
+/* ======================= Карточка в чате ======================= */
 
-.tf-card { color: var(--tf-text); animation: tf-fade 0.2s ease-out; }
+.tf-card { color: var(--tf-text); }
 .tf-card__head {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
-  padding-bottom: 6px;
-  border-bottom: 2px solid var(--tf-accent);
 }
-.tf-card__head img { flex: 0 0 32px; width: 32px; height: 32px; border: none; object-fit: contain; }
 .tf-card__title { flex: 1; min-width: 0; }
-.tf-card__title h3 { margin: 0; border: none; font-size: 15px; line-height: 1.2; overflow-wrap: anywhere; }
-.tf-card__formula { font-size: 11px; color: var(--tf-muted); font-family: var(--font-mono, monospace); }
-.tf-card__total {
-  flex: 0 0 auto;
-  min-width: 36px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  background: var(--tf-accent);
-  color: #fff;
-  font-size: 18px;
+.tf-card__title h3 {
+  margin: 0;
+  border: none;
+  font-family: "Modesto Condensed", "Palatino Linotype", Georgia, serif;
+  font-size: 19px;
   font-weight: 700;
-  text-align: center;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+.tf-card__formula { font-size: 12px; color: var(--tf-muted); font-variant-numeric: tabular-nums; }
+
+/* Латунная монета с числом — главная деталь */
+.tf-coin {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  min-width: 46px;
+  height: 46px;
+  padding: 0 6px;
+  border-radius: 999px;
+  border: 1px solid var(--tf-brass-lo);
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.55), transparent 45%),
+    radial-gradient(circle, var(--tf-brass-hi) 0%, var(--tf-brass) 62%, var(--tf-brass-lo) 100%);
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 240, 200, 0.25),
+    inset 0 -2px 4px rgba(60, 40, 5, 0.35),
+    0 2px 5px rgba(0, 0, 0, 0.3);
+  color: #2a1d05;
+  font-size: 21px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 0 rgba(255, 245, 215, 0.6);
+}
+
+/* Шкала: где на диапазоне таблицы легло число */
+.tf-ruler {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 2px;
+  font-size: 10px;
+  color: var(--tf-muted);
   font-variant-numeric: tabular-nums;
 }
+.tf-ruler__track {
+  position: relative;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--tf-line);
+  overflow: hidden;
+}
+.tf-ruler__fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--tf-brass-lo), var(--tf-brass-hi));
+  transform-origin: left center;
+  transform: scaleX(var(--tf-pos, 0));
+}
+
 .tf-card__result {
   display: flex;
   gap: 8px;
   align-items: flex-start;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--tf-line);
+  padding: 8px 0;
+  border-top: 1px solid var(--tf-line);
   overflow-wrap: anywhere;
 }
-.tf-card__range { flex: 0 0 auto; color: var(--tf-accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+.tf-card__range {
+  flex: 0 0 auto;
+  min-width: 22px;
+  color: var(--tf-accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
 .tf-card__img { flex: 0 0 auto; width: 40px; height: 40px; border: none; object-fit: contain; }
-.tf-card__text { flex: 1; min-width: 0; font-size: 13px; }
+.tf-card__text { flex: 1; min-width: 0; font-size: 14px; line-height: 1.4; }
 .tf-card__text p { margin: 0 0 4px; }
 .tf-card__text p:last-child { margin-bottom: 0; }
 .tf-missing-link { color: var(--tf-muted); border-bottom: 1px dotted var(--tf-muted); }
-.tf-card__actions { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.tf-missing-link i { font-size: 0.85em; margin-right: 2px; }
+
+.tf-card__actions { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
 .tf-card__actions button {
   flex: 1 1 auto;
   width: auto;
-  min-height: 28px;
-  padding: 0 6px;
+  min-height: 30px;
+  padding: 0 8px;
   font-size: 12px;
-  line-height: 26px;
+  line-height: 28px;
   white-space: nowrap;
+  transition: transform 120ms var(--tf-ease-out);
 }
+.tf-card__actions button:active { transform: scale(0.97); }
+.tf-card__actions [data-tf-action="reveal"] i { color: var(--tf-accent); }
+
+/* Новый бросок: монета «оседает», шкала заполняется, текст проявляется следом (стаггер 60 мс) */
+.tf-card.tf-fresh .tf-coin { animation: tf-settle 260ms var(--tf-ease-out); }
+.tf-card.tf-fresh .tf-ruler__fill { animation: tf-fill 420ms var(--tf-ease-out) 60ms backwards; }
+.tf-card.tf-fresh .tf-card__result { animation: tf-rise 220ms var(--tf-ease-out) 120ms backwards; }
+@keyframes tf-settle { from { opacity: 0; transform: scale(0.85) rotate(-25deg); } }
+@keyframes tf-fill { from { transform: scaleX(0); } }
+@keyframes tf-rise { from { opacity: 0; transform: translateY(4px); } }
 
 @media (max-width: 600px) {
-  .tf-card__text { font-size: 14px; }
-  .tf-card__actions button { min-height: 36px; }
+  .tf-card__text { font-size: 15px; }
+  .tf-card__actions button { min-height: 38px; }
 }
+
+/* Меньше движения: оставляем проявление, убираем перемещения и масштаб */
+@media (prefers-reduced-motion: reduce) {
+  .tf-card.tf-fresh .tf-coin,
+  .tf-card.tf-fresh .tf-card__result,
+  .tf-import__done > i,
+  .tf-preview { animation: tf-fade 150ms ease; }
+  .tf-card.tf-fresh .tf-ruler__fill,
+  .tf-roll.tf-rolling i { animation: none; }
+  .tf-roll:active,
+  .tf-card__actions button:active { transform: none; }
+  .tf-dropzone.tf-over > i { transform: none; }
+}
+@keyframes tf-fade { from { opacity: 0; } }

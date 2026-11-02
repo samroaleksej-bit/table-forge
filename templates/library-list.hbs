@@ -14,7 +14,7 @@
   {{else}}
     <ol class="tf-rows">
       {{#each rows}}
-      <li class="tf-row" data-uuid="{{uuid}}">
+      <li class="tf-row{{#if @first}}{{#if @root.query}} tf-row--top{{/if}}{{/if}}" data-uuid="{{uuid}}">
         <button type="button" class="tf-roll" data-action="roll" data-tooltip="{{localize "TABLEFORGE.Library.Roll"}}" aria-label="{{localize "TABLEFORGE.Library.Roll"}}"><i class="fa-solid fa-dice-d20"></i></button>
         <img class="tf-row__img" src="{{img}}" alt="" loading="lazy">
         <div class="tf-row__main">
@@ -31,5 +31,5 @@
     </ol>
     {{#if truncated}}<p class="tf-more">{{localize "TABLEFORGE.Library.Truncated"}}</p>{{/if}}
   {{/if}}
-  <footer class="tf-status">{{localize "TABLEFORGE.Library.Found"}}: {{total}} · <kbd>Enter</kbd> {{localize "TABLEFORGE.Library.EnterHint"}}</footer>
+  <footer class="tf-status">{{localize "TABLEFORGE.Library.Found"}}: {{total}}</footer>
 </section>

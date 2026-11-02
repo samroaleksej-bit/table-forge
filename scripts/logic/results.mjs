@@ -53,3 +53,17 @@ export function previewRows(results = [], limit = 12) {
     more: Math.max(0, sorted.length - limit)
   };
 }
+
+/**
+ * Где выпавшее число лежит на шкале таблицы: для полоски-линейки в карточке.
+ * @returns {{min:number, max:number, pos:number} | null} pos — доля от 0 до 1
+ */
+export function rollPosition(results = [], total) {
+  const ranges = results.map((r) => r.range).filter((r) => Array.isArray(r) && Number.isFinite(r[0]) && Number.isFinite(r[1]));
+  if (!ranges.length || !Number.isFinite(total)) return null;
+  const min = Math.min(...ranges.map((r) => r[0]));
+  const max = Math.max(...ranges.map((r) => r[1]));
+  if (max <= min) return null;
+  const pos = Math.min(1, Math.max(0, (total - min) / (max - min)));
+  return { min, max, pos: Number(pos.toFixed(3)) };
+}

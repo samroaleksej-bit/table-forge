@@ -1,7 +1,7 @@
 import { MODULE_ID, SETTINGS, RECENT_LIMIT, TEMPLATES, api, t } from "./constants.mjs";
 import { getSetting, setSetting } from "./settings.mjs";
 import { inferFormula } from "./logic/formula.mjs";
-import { resultSourceHTML, usableImage } from "./logic/results.mjs";
+import { resultSourceHTML, usableImage, rollPosition } from "./logic/results.mjs";
 
 /**
  * Бросок таблицы в один клик → карточка модуля в чате.
@@ -38,6 +38,7 @@ export async function rerollMessage(message) {
   const drawn = await drawResults(table);
   if (!drawn) return;
   const content = await renderCard(table, drawn);
+  rerolled.add(message.id);
   await message.update({ content, rolls: [drawn.roll.toJSON()] });
   await trackRoll(table);
 }
@@ -87,9 +88,9 @@ export async function renderCard(table, { roll, results }) {
   }
   return api.renderTemplate(`${TEMPLATES}/chat-card.hbs`, {
     name: table.name,
-    img: usableImage(table.img, moduleActive) ?? "icons/svg/d20-grey.svg",
     formula: roll.formula,
     total: roll.total,
+    ruler: rollPosition(table.results.contents, roll.total),
     results: rows,
     multiple: rows.length > 1
   });
@@ -136,4 +137,13 @@ export function bindChatCard(message, html) {
   }
   // Битые картинки (модуль выключен, файл удалён) просто прячем.
   for (const img of card.querySelectorAll("img")) img.addEventListener("error", () => img.remove(), { once: true });
+
+  const ruler = card.querySelector(".tf-ruler");
+  if (ruler) ruler.style.setProperty("--tf-pos", ruler.dataset.pos);
+  // Анимация появления — только у нового броска, не у истории чата при перезагрузке.
+  const fresh = rerolled.delete(message.id) || Date.now() - (message.timestamp ?? 0) < 4000;
+  card.classList.toggle("tf-fresh", fresh);
 }
+
+/** id сообщений, которые этот клиент только что перебросил: их карточка анимируется заново. */
+const rerolled = new Set();

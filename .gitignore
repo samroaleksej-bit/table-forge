@@ -5,3 +5,6 @@ node_modules/
 dist/
 *.zip
 mock/shots/
+
+# Скилы Claude Code (локально, сторонние)
+.claude/skills/

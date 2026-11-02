@@ -2,6 +2,7 @@
   <label class="tf-search">
     <i class="fa-solid fa-magnifying-glass"></i>
     <input type="search" name="tf-search" value="{{query}}" placeholder="{{localize "TABLEFORGE.Library.SearchPlaceholder"}}" autocomplete="off" spellcheck="false">
+    <span class="tf-search__hint"><kbd>Enter</kbd> {{localize "TABLEFORGE.Library.EnterHint"}}</span>
   </label>
   <select name="tf-mode" data-tooltip="{{localize "TABLEFORGE.Library.ModeHint"}}">
     <option value="gm" {{#if (eq mode "gm")}}selected{{/if}}>{{localize "TABLEFORGE.Mode.gm"}}</option>

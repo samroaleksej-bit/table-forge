@@ -95,3 +95,13 @@ test("sortCopiesLast", () => {
   const out = sortCopiesLast([{ name: "a-X (1).json" }, { name: "a-X.json" }]).map((f) => f.name);
   assert.deepEqual(out, ["a-X.json", "a-X (1).json"]);
 });
+
+test("rollPosition: шкала диапазона", async () => {
+  const { rollPosition } = await import("../scripts/logic/results.mjs");
+  const res = Array.from({ length: 20 }, (_, i) => ({ range: [i + 1, i + 1] }));
+  assert.deepEqual(rollPosition(res, 1), { min: 1, max: 20, pos: 0 });
+  assert.deepEqual(rollPosition(res, 20), { min: 1, max: 20, pos: 1 });
+  assert.equal(rollPosition(res, 99).pos, 1);
+  assert.equal(rollPosition([{ range: [1, 1] }], 1), null);
+  assert.equal(rollPosition([], 3), null);
+});

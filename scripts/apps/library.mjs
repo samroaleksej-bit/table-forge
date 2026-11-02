@@ -316,8 +316,8 @@ export class TableLibrary extends HandlebarsApplicationMixin(ApplicationV2) {
     const uuid = target.closest("[data-uuid]")?.dataset.uuid;
     if (!uuid) return;
     target.classList.add("tf-rolling");
+    target.addEventListener("animationend", () => target.classList.remove("tf-rolling"), { once: true });
     await rollTable(uuid);
-    target.classList.remove("tf-rolling");
   }
 
   static async #onToggleFavorite(event, target) {
